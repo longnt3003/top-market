@@ -1,0 +1,92 @@
+﻿@using TopMarket.Common
+@using (Ajax.BeginForm("AddSetting", "SettingSystem", new AjaxOptions
+{
+	OnBegin = "OnBegin",
+	OnSuccess = "OnSuccess",
+	OnFailure = "OnFailure"
+}))
+{
+	<script>
+		function OnBegin() {
+			$('#load_page').html('Saving...');
+		}
+		function OnSuccess(rs) {
+			$('#load_page').html('Saved successfully.');
+		}
+		function OnFailure(rs) {
+			$('#load_page').html('Error occurred while saving.');
+		}
+	</script>
+
+	@Html.AntiForgeryToken()
+	@Html.ValidationSummary(true, string.Empty, new { @class = "text-danger" })
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header p-2">
+					<ul class="nav nav-pills">
+						<li class="nav-item">
+							<a class="nav-link active" href="#activity" data-toggle="tab">Basic Information</a>
+						</li>
+					</ul>
+				</div>
+				<div class="card-body">
+					<div class="tab-content">
+						<div class="active tab-pane" id="activity">
+							<div class="form-group">
+								<label for="SettingTitle">Page Title</label>
+								<input
+									id="SettingTitle"
+									name="SettingTitle"
+									type="text"
+									class="form-control"
+									value="@SettingHelper.GetValue("SettingTitle")" />
+							</div>
+							<div class="form-group">
+								<label for="txtSettingLogo">Logo</label>
+								<div class="input-group">
+									<input
+										id="txtSettingLogo"
+										name="SettingLogo"
+										type="text"
+										class="form-control"
+										value="@SettingHelper.GetValue("SettingLogo")" />
+									<div class="input-group-append">
+										<input
+											type="button"
+											value="Upload Image"
+											class="btn btn-info"
+											onclick="BrowseServer('txtSettingLogo');" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="SettingHotline">Hotline</label>
+								<input
+									id="SettingHotline"
+									name="SettingHotline"
+									type="text"
+									class="form-control"
+									value="@SettingHelper.GetValue("SettingHotline")" />
+							</div>
+							<div class="form-group">
+								<label for="SettingEmail">Email</label>
+								<input
+									id="SettingEmail"
+									name="SettingEmail"
+									type="text"
+									class="form-control"
+									value="@SettingHelper.GetValue("SettingEmail")" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12">
+			<button type="submit" class="btn btn-success">Save</button>
+			<a href="/admin/settingsystem" class="btn btn-danger">Back</a>
+		</div>
+	</div>
+}

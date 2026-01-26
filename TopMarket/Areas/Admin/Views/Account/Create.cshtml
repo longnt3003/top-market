@@ -1,0 +1,89 @@
+﻿@model TopMarket.Models.CreateAccountViewModel
+@{
+    ViewBag.Title = "Create Account";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                <i class="fas fa-bars"></i>
+            </a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/account" class="nav-link">Account</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/account/create" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Add New Account</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Create Account</h3>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Create", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(false, string.Empty, new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <label for="UserName">Username</label>
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "form-control", @id = "UserName" })
+                </div>
+
+                <div class="form-group">
+                    <label for="FullName">Full name</label>
+                    @Html.TextBoxFor(x => x.FullName, new { @class = "form-control", @id = "FullName" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    @Html.TextBoxFor(x => x.Email, new { @class = "form-control", @id = "Email", type = "email" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Phone">Phone</label>
+                    @Html.TextBoxFor(x => x.Phone, new { @class = "form-control", @id = "Phone" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Roles">Role</label>
+                    @Html.DropDownListFor(x => x.Roles, ViewBag.Role as SelectList, "- Select Role -", new { @class = "form-control", @id = "Roles" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Password">Password</label>
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", @id = "Password" })
+                </div>
+
+                <div class="form-group">
+                    <label for="ConfirmPassword">Confirm Password</label>
+                    @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control", @id = "ConfirmPassword" })
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Create</button>
+                </div>
+            }
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+</section>

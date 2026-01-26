@@ -1,0 +1,173 @@
+﻿@model TopMarket.Models.EntityFramework.Product
+
+@{
+	ViewBag.Title = "Add Product";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader {
+	<ul class="navbar-nav">
+		<li class="nav-item">
+			<a class="nav-link" data-widget="pushmenu" href="#" role="button">
+				<i class="fas fa-bars"></i>
+			</a>
+		</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="/admin/home" class="nav-link">Home</a>
+		</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="/admin/product" class="nav-link">Product Management</a>
+		</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="/admin/product/add" class="nav-link">Add Product</a>
+		</li>
+	</ul>
+}
+
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>@ViewBag.Title</h1>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="content">
+	<div class="card">
+		<div class="card-header">
+			<h3 class="card-title">New Product Information</h3>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-12">
+					@using (Html.BeginForm("Add", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+					{
+						@Html.AntiForgeryToken()
+						@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+						<div class="form-group">
+							<label for="Title">Product Name</label>
+							@Html.TextBoxFor(x => x.Title, new { @class = "form-control", @id = "Title", @placeholder = "Product Name" })
+							@Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
+						</div>
+
+						<div class="form-group">
+							<label for="Alias">Alias</label>
+							@Html.TextBoxFor(x => x.Alias, new { @class = "form-control", @id = "Alias", @placeholder = "Alias" })
+							@Html.ValidationMessageFor(x => x.Alias, "", new { @class = "text-danger" })
+						</div>
+
+						<div class="form-group">
+							<label for="ProductCode">SKU</label>
+							@Html.TextBoxFor(x => x.ProductCode, new { @class = "form-control", @id = "ProductCode", @placeholder = "Stock Keeping Unit" })
+							@Html.ValidationMessageFor(x => x.ProductCode, "", new { @class = "text-danger" })
+						</div>
+
+						<div class="form-group">
+							<label for="ProductCategoryId">Category</label>
+							@Html.DropDownListFor(x => x.ProductCategoryId, ViewBag.ProductCategory as SelectList, "-Select Category-", new { @class = "form-control", @id = "ProductCategoryId" })
+							@Html.ValidationMessageFor(x => x.ProductCategoryId, "", new { @class = "text-danger" })
+						</div>
+
+						<div class="form-group">
+							<label for="demoPrice">Price</label>
+							<input type="text" id="demoPrice" class="form-control auto" value="0" />
+							@Html.HiddenFor(x => x.Price, new { @id = "Price" })
+							@Html.ValidationMessageFor(x => x.Price, "", new { @class = "text-danger" })
+						</div>
+
+						<div class="form-group">
+							<label for="demoPromotionPrice">Promotion Price</label>
+							<input type="text" id="demoPromotionPrice" class="form-control auto" value="0" />
+							@Html.HiddenFor(x => x.PromotionPrice, new { @id = "PromotionPrice" })
+							@Html.ValidationMessageFor(x => x.PromotionPrice, "", new { @class = "text-danger" })
+						</div>
+
+						<div class="custom-control custom-checkbox">
+							@Html.CheckBoxFor(x => x.IsActive, new { @class = "custom-control-input", @id = "IsActive" })
+							<label for="IsActive" class="custom-control-label">Display</label>
+						</div>
+
+						<button type="submit" class="btn btn-success">Add New</button>
+					}
+				</div>
+			</div>
+		</div>
+		<div class="card-footer text-center">
+			<small class="text-muted">
+				&copy; @DateTime.Now.Year TopMarket | Admin Panel
+			</small>
+		</div>
+	</div>
+</section>
+
+@section scripts{
+	<script>
+		$(function () {
+			$('.auto').autoNumeric('init');
+
+			$('#demoPrice').on('blur focusout keypress keyup', function () {
+				var demoGet = $('#demoPrice').autoNumeric('get');
+				$('#Price').val(demoGet);
+			});
+
+			$('#demoPromotionPrice').on('blur focusout keypress keyup', function () {
+				var demoGet = $('#demoPromotionPrice').autoNumeric('get');
+				$('#PromotionPrice').val(demoGet);
+			});
+
+			if ($('#txtDetail').length) {
+				CKEDITOR.replace('txtDetail', {
+					customConfig: '/content/ckeditor/config.js',
+					extraAllowedContent: 'span',
+				});
+			}
+
+			$('body').on('click', '.btnDeleteImg', function (e) {
+				e.preventDefault();
+				if (confirm('Are you sure you want to delete this image?')) {
+					var _id = $(this).data('id');
+					$('#trow_' + _id).fadeOut('fast', function () {
+						$(this).remove();
+					});
+				}
+			});
+		});
+
+		// BrowseServer
+		function BrowseServer(field) {
+			var finder = new CKFinder();
+			finder.selectActionFunction = function (fileUrl) {
+				addImageProduct(fileUrl);
+			};
+			finder.popup();
+		}
+
+		// Add image row
+		function addImageProduct(url) {
+			var temp = $('#tCurrentId').val();
+			var currentId = parseInt(temp) + 1;
+
+			var str = `
+					<tr id="trow_${currentId}">
+						<td class="text-center">${currentId}</td>
+						<td class="text-center">
+							<img width="50" src="${url}" />
+							<input type="hidden" value="${url}" name="Images"/>
+						</td>
+						<td class="text-center">
+							<input type="radio" name="rDefault" value="${currentId}" ${currentId === 1 ? 'checked' : ''}/>
+						</td>
+						<td class="text-center">
+							<a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnDeleteImg">Delete</a>
+						</td>
+					</tr>`;
+
+			$('#tbHtml').append(str);
+			$('#tCurrentId').val(currentId);
+		}
+	</script>
+}
+

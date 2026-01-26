@@ -1,0 +1,193 @@
+﻿@model TopMarket.Models.EntityFramework.Product
+@{
+    ViewBag.Title = "Update Product";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader {
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                <i class="fas fa-bars"></i>
+            </a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/product" class="nav-link">Product Management</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/product/edit/@Model.Id" class="nav-link">Update Product</a>
+        </li>
+    </ul>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/admin/product">Product</a></li>
+                    <li class="breadcrumb-item active">Update</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Product Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    @using (Html.BeginForm("Edit", "Product", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DateCreated)
+
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#activity" data-toggle="tab">Basic Information</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="activity">
+                                        <div class="form-group">
+                                            <label for="Title">Product Name</label>
+                                            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @id = "Title", @placeholder = "Product Name" })
+                                            @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Alias">Alias</label>
+                                            @Html.TextBoxFor(x => x.Alias, new { @class = "form-control", @id = "Alias", @placeholder = "Alias" })
+                                            @Html.ValidationMessageFor(x => x.Alias, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ProductCode">SKU</label>
+                                            @Html.TextBoxFor(x => x.ProductCode, new { @class = "form-control", @id = "ProductCode", @placeholder = "Stock Keeping Unit" })
+                                            @Html.ValidationMessageFor(x => x.ProductCode, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ProductCategoryId">Category</label>
+                                            @Html.DropDownListFor(x => x.ProductCategoryId, ViewBag.ProductCategory as SelectList, "-Select Category-", new { @class = "form-control", @id = "ProductCategoryId" })
+                                            @Html.ValidationMessageFor(x => x.ProductCategoryId, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Description">Description</label>
+                                            @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @id = "Description", @placeholder = "Product Description" })
+                                            @Html.ValidationMessageFor(x => x.Description, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="txtDetail">Product Detail</label>
+                                            @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail" })
+                                            @Html.ValidationMessageFor(x => x.Detail, null, new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <label for="Quantity">Quantity</label>
+                                                    @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control", @id = "Quantity" })
+                                                    @Html.ValidationMessageFor(x => x.Quantity, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <label for="demoPrice">Price</label>
+                                                    <input type="text" id="demoPrice" value="@Model.Price" class="form-control auto" data-a-dec="," data-a-sep="." />
+                                                    @Html.HiddenFor(x => x.Price, new { @id = "Price" })
+                                                    @Html.ValidationMessageFor(x => x.Price, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <label for="demoPriceSale">Promotion Price</label>
+                                                    <input type="text" id="demoPriceSale" value="@Model.PromotionPrice" class="form-control auto" />
+                                                    @Html.HiddenFor(x => x.PromotionPrice, new { @id = "PromotionPrice" })
+                                                    @Html.ValidationMessageFor(x => x.PromotionPrice, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <div class="custom-control custom-checkbox">
+                                                    @Html.CheckBoxFor(x => x.IsActive, new { @class = "custom-control-input", @id = "IsActive" })
+                                                    <label for="IsActive" class="custom-control-label">Active</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="custom-control custom-checkbox">
+                                                    @Html.CheckBoxFor(x => x.IsHot, new { @class = "custom-control-input", @id = "IsHot" })
+                                                    <label for="IsHot" class="custom-control-label">Hot</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="custom-control custom-checkbox">
+                                                    @Html.CheckBoxFor(x => x.IsFeature, new { @class = "custom-control-input", @id = "IsFeature" })
+                                                    <label for="IsFeature" class="custom-control-label">Feature</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="custom-control custom-checkbox">
+                                                    @Html.CheckBoxFor(x => x.IsSale, new { @class = "custom-control-input", @id = "IsSale" })
+                                                    <label for="IsSale" class="custom-control-label">On Sale</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">Save</button>
+                                <a href="/admin/product" class="btn btn-danger">Back</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            <small class="text-muted">&copy; @DateTime.Now.Year TopMarket | Admin Panel</small>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script>
+        $(function () {
+            $('.auto').autoNumeric('init');
+
+            $('#demoPrice').on('blur focusout keypress keyup', function () {
+                var demoGet = $('#demoPrice').autoNumeric('get');
+                $('#Price').val(demoGet);
+            });
+
+            $('#demoPromotionPrice').on('blur focusout keypress keyup', function () {
+                var demoGet = $('#demoPromotionPrice').autoNumeric('get');
+                $('#PromotionPrice').val(demoGet);
+            });
+
+            if ($('#txtDetail').length) {
+                CKEDITOR.replace('txtDetail', {
+                    customConfig: '/content/ckeditor/config.js',
+                    extraAllowedContent: 'span'
+                });
+            }
+        });
+    </script>
+}

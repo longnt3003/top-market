@@ -1,0 +1,33 @@
+﻿@model IEnumerable<TopMarket.Models.EntityFramework.OrderDetail>
+
+@if (Model != null && Model.Any()) {
+    var i = 1;
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th class="text-right">Price</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-right">Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>@i</td>
+                    <td>@item.Product.Title</td>
+                    <td class="text-right">@TopMarket.Common.Common.FormatNumber(item.Price, 0)</td>
+                    <td class="text-center">@item.Quantity</td>
+                    <td class="text-right">@TopMarket.Common.Common.FormatNumber(item.Price * item.Quantity, 0)</td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+} else {
+    <div class="alert alert-info text-center">
+        No order details available.
+    </div>
+}

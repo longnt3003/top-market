@@ -1,0 +1,113 @@
+﻿@model IEnumerable<TopMarket.Models.EntityFramework.ProductCategory>
+@{
+    ViewBag.Title = "Product Category";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                <i class="fas fa-bars"></i>
+            </a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/productcategory" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title">Product Category List</h3>
+            <div class="card-tools">
+                <a href="/admin/productcategory/add" class="btn btn-primary">Add</a>
+                <button type="button" class="btn btn-danger" id="btnDeleteAll">Delete All</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll" /></th>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Date Created</th>
+                        <th style="width:150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any()) {
+                        var i = 1;
+                        foreach (var item in Model) {
+                            <tr id="trow_@item.Id">
+                                <td><input type="checkbox" class="cbkItem" value="@item.Id" /></td>
+                                <td>@i</td>
+                                <td>@item.Title</td>
+                                <td>@item.DateCreated.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <a href="/admin/productcategory/edit/@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                                    <button type="button" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">Delete</button>
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    } else {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No product categories found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(function () {
+            // Select all checkboxes
+            $('#selectAll').on('change', function () {
+                $('.cbkItem').prop('checked', this.checked);
+            });
+
+            // Delete all selected
+            $('#btnDeleteAll').on('click', function (e) {
+                e.preventDefault();
+                var ids = $('.cbkItem:checked').map(function () { return $(this).val(); }).get().join(',');
+                if (ids.length > 0 && confirm('Are you sure you want to delete selected records?')) {
+                    $.post('/admin/productcategory/deleteAll', { ids: ids }, function (rs) {
+                        if (rs.success) location.reload();
+                    });
+                }
+            });
+
+            // Delete single item
+            $('body').on('click', '.btnDelete', function () {
+                var id = $(this).data("id");
+                if (confirm('Are you sure you want to delete this record?')) {
+                    $.post('/admin/productcategory/delete', { id: id }, function (rs) {
+                        if (rs.success) {
+                            $('#trow_' + id).remove();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

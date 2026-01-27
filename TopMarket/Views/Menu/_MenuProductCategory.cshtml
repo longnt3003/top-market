@@ -12,19 +12,18 @@
     }
 </style>
 
-@if (Model != null && Model.Any())
-{
+@if (Model != null && Model.Any()) {
     <div class="banner">
         <div class="container">
             <div class="row">
-                @foreach (var item in Model)
-                {
-                    <div class="col-md-3 img-category">
+                @foreach (var item in Model) {
+                    <div class="col-md-3 img-category mb-4">
                         <a href="/product-category/@item.Alias-@item.Id">
-                            <div class="img-2 banner_item align-items-center" style="background-image: url(@item.Icon);background-size:80%; background-position: center">
+                            <div class="img-2 banner_item align-items-center"
+                                 style="background-image:url(@item.Icon); background-size:80%; background-position:center;">
                             </div>
                         </a>
-                        <div class="banner_category">
+                        <div class="banner_category text-center mt-2">
                             <a href="/product-category/@item.Alias-@item.Id">@item.Title</a>
                         </div>
                     </div>

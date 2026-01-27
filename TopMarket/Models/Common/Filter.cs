@@ -40,7 +40,7 @@
 			str = str.Replace(" ", "-").Replace("--", "-");
 			foreach (var c in Specials)
 			{
-				str = str.Replace(c.ToString(), "");
+				str = str.Replace(c.ToString(), string.Empty);
 			}
 
 			return str.ToLower();
@@ -60,7 +60,7 @@
 			str = str.Replace("--", "-");
 			foreach (var c in Specials)
 			{
-				str = str.Replace(c.ToString(), "");
+				str = str.Replace(c.ToString(), string.Empty);
 			}
 
 			return str.ToLower();

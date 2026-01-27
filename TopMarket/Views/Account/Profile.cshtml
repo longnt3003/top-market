@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css">
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_styles.css">
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_responsive.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_styles.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_responsive.css" />
 
 <style>
     .news_section_container {
@@ -34,40 +34,45 @@
 <div class="container contact_container">
     <div class="row">
         <div class="col">
-            <!-- Breadcrumbs -->
             <div class="breadcrumbs d-flex flex-row align-items-center">
                 <ul>
                     <li><a href="/home">Home</a></li>
-                    <li class="active"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i>Profile</a></li>
+                    <li class="active">
+                        <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i> Profile</a>
+                    </li>
                 </ul>
             </div>
-
         </div>
     </div>
 
     <h2 class="text-center">Personal Information</h2>
     <div class="row">
         <div class="col-md-12">
-            @using (Html.BeginForm("PostProfile", "Account"))
+            @using (Html.BeginForm("PostProfile", "Account", FormMethod.Post))
             {
-                @Html.ValidationSummary(false)
                 @Html.AntiForgeryToken()
-                <div class="form-group">
-                    <label for="exampleInputEmail">Fullname</label>
-                    <input type="text" class="form-control" aria-describedby="emailHelp" name="FullName" value="@Model.FullName" />
+                @Html.ValidationSummary(false, string.Empty, new { @class = "text-danger" })
+
+                <div class="form-group mb-3">
+                    @Html.Label("FullName", "Fullname")
+                    <input type="text" class="form-control" name="FullName" value="@Model.FullName" />
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail">Username</label>
-                    <input type="text" class="form-control" aria-describedby="emailHelp" name="UserName" value="@Model.UserName" readonly />
+
+                <div class="form-group mb-3">
+                    @Html.Label("UserName", "Username")
+                    <input type="text" class="form-control" name="UserName" value="@Model.UserName" readonly />
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail">Phone</label>
-                    <input type="text" class="form-control" aria-describedby="emailHelp" name="Phone" value="@Model.Phone" />
+
+                <div class="form-group mb-3">
+                    @Html.Label("Phone", "Phone")
+                    <input type="text" class="form-control" name="Phone" value="@Model.Phone" />
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail">Email</label>
-                    <input type="text" class="form-control" aria-describedby="emailHelp" name="Email" value="@Model.Email" readonly />
+
+                <div class="form-group mb-3">
+                    @Html.Label("Email", "Email")
+                    <input type="text" class="form-control" name="Email" value="@Model.Email" readonly />
                 </div>
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Update</button>
                 </div>

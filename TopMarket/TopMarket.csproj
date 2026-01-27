@@ -3394,7 +3394,6 @@
     <Content Include="Views\ShoppingCart\VnpayReturn.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Content\ckfinder\userfiles\" />
   </ItemGroup>
   <ItemGroup>

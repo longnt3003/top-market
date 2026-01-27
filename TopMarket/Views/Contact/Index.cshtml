@@ -1,45 +1,44 @@
-﻿
-
-@{
+﻿@{
     ViewBag.Title = "Contact Us | TopMarket";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_styles.css">
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_responsive.css">
+
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_styles.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_responsive.css" />
 
 <div class="container contact_container">
     <div class="row">
         <div class="col">
-
-            <!-- Breadcrumbs -->
-
             <div class="breadcrumbs d-flex flex-row align-items-center">
                 <ul>
                     <li><a href="/home">Home</a></li>
-                    <li class="active"><a href="/contact"><i class="fa fa-angle-right" aria-hidden="true"></i>Contact</a></li>
+                    <li class="active">
+                        <a href="/contact"><i class="fa fa-angle-right" aria-hidden="true"></i> Contact</a>
+                    </li>
                 </ul>
             </div>
-
         </div>
     </div>
 
-    <!-- Map Container -->
-
-    <div class="row">
+    <!-- Map -->
+    <div class="row mb-4">
         <div class="col">
             <div id="google_map">
                 <div class="map_container">
                     <div id="map">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5005632334623!2d106.70294497477826!3d10.772921389375629!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f46a8dc49b7%3A0xa932da8f4e4403e8!2zMTAgxJAuIE5ndXnDqsyDbiBIdcOqzKMsIELhur9uIE5naMOpLCBRdeG6rW4gMSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1700758891334!5m2!1svi!2s" style="border:0;width:1110px;height:537px" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5005632334623!2d106.70294497477826!3d10.772921389375629!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f46a8dc49b7%3A0xa932da8f4e4403e8!2zMTAgxJAuIE5ndXnDqsyDbiBIdcOqzKMsIELhur9uIE5naMOpLCBRdeG6rW4gMSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1700758891334!5m2!1svi!2s"
+                            style="border:0;width:100%;height:500px"
+                            allowfullscreen
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Contact Us -->
-
+    <!-- Contact Info -->
     <div class="row">
-
         <div class="col-lg-6 contact_col">
             <div class="contact_contents">
                 <h1>Contact Us</h1>
@@ -49,9 +48,7 @@
                     <p><strong>Email:</strong> longnt2k@gmail.com</p>
                     <p><strong>Address:</strong> 10 Nguyen Hue - District 1 - Ho Chi Minh City</p>
                 </div>
-                <div>
-                    <p><hr /></p>
-                </div>
+                <hr />
                 <div>
                     <p>Open hours: 8.00 - 18.00 Mon-Sun</p>
                     <p>Delivery: 6.00 - 20.00 Mon-Sun</p>
@@ -59,52 +56,44 @@
             </div>
 
             <!-- Follow Us -->
-
-            <div class="follow_us_contents">
+            <div class="follow_us_contents mt-4">
                 <h1>Follow Us</h1>
                 <ul class="social d-flex flex-row">
-                    <li><a href="#" style="background-color: #3a61c9"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                    <li><a href="#" style="background-color: #41a1f6"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                    <li><a href="#" style="background-color: #fb4343"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                    <li><a href="#" style="background-color: #8f6247"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                    <li><a href="#" class="social-link" style="background-color:#3a61c9"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#" class="social-link" style="background-color:#41a1f6"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#" class="social-link" style="background-color:#fb4343"><i class="fa fa-google-plus"></i></a></li>
+                    <li><a href="#" class="social-link" style="background-color:#8f6247"><i class="fa fa-instagram"></i></a></li>
                 </ul>
             </div>
-
         </div>
 
+        <!-- Contact Form -->
         <div class="col-lg-6 get_in_touch_col">
             <div class="get_in_touch_contents">
                 <h1>Get In Touch With Us!</h1>
-                <p>Fill out the form below to recieve a free and confidential.</p>
-                <form action="post">
-                    <div>
-                        <input id="input_name" class="form_input input_name input_ph" type="text" name="name" placeholder="Name" required="required" data-error="Name is required.">
-                        <input id="input_email" class="form_input input_email input_ph" type="email" name="email" placeholder="Email" required="required" data-error="Valid email is required.">
-                        <input id="input_website" class="form_input input_website input_ph" type="url" name="name" placeholder="Website" required="required" data-error="Name is required.">
-                        <textarea id="input_message" class="input_ph input_message" name="message" placeholder="Message" rows="3" required data-error="Please, write us a message."></textarea>
+                <p>Fill out the form below to receive a free and confidential response.</p>
+                <form method="post">
+                    <div class="mb-3">
+                        <input id="input_name" class="form_input form-control" type="text" name="name" placeholder="Name" required />
+                    </div>
+                    <div class="mb-3">
+                        <input id="input_email" class="form_input form-control" type="email" name="email" placeholder="Email" required />
+                    </div>
+                    <div class="mb-3">
+                        <input id="input_website" class="form_input form-control" type="url" name="website" placeholder="Website" />
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="input_message" class="form-control" name="message" placeholder="Message" rows="4" required></textarea>
                     </div>
                     <div>
-                        <button id="review_submit" type="submit" class="red_button message_submit_btn trans_300" value="Submit">send message</button>
+                        <button id="review_submit" type="submit" class="btn btn-danger">Send Message</button>
                     </div>
                 </form>
             </div>
         </div>
-
     </div>
 </div>
 
-
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="styles/bootstrap4/popper.js"></script>
-<script src="styles/bootstrap4/bootstrap.min.js"></script>
-<script src="plugins/Isotope/isotope.pkgd.min.js"></script>
-<script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="plugins/easing/easing.js"></script>
-@*<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>*@
-<script src="plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
-<script src="js/contact_custom.js"></script>
-
-
-@section scripts{
+@section scripts {
     <script src="~/Content/assets/js/contact_custom.js"></script>
 }

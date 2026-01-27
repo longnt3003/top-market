@@ -1,56 +1,56 @@
 ﻿@model TopMarket.Models.OrderViewModel
 
-@using (Ajax.BeginForm("CheckOut", "Shoppingcart", new AjaxOptions
+@using (Ajax.BeginForm("CheckOut", "ShoppingCart", new AjaxOptions
 {
     HttpMethod = "POST",
     UpdateTargetId = "load_data",
     OnSuccess = "OnSuccessCO",
     OnFailure = "OnFailure",
     OnBegin = "OnBeginCO"
-
-}, new { @Id = "myForm" }))
+}, new { id = "myForm" }))
 {
     <script>
         function OnBeginCO() {
             $('#btnCheckOut').attr("disabled", "disabled");
-            $('#load_send').html('<h2>Loading...</h2>');
+            $('#load_send').html('<h5>Loading...</h5>');
         }
         function OnSuccessCO(res) {
             if (res.Success) {
-                if (res.Code == 1) {
+                if (res.Code === 1) {
                     location.href = "/ShoppingCart/CheckOutSuccess";
-                }
-                else {
+                } else {
                     location.href = res.Url;
                 }
             }
         }
+        function OnFailure() {
+            $('#load_send').html("<div class='alert alert-danger'>Checkout failed. Please try again.</div>");
+            $('#btnCheckOut').removeAttr("disabled");
+        }
     </script>
+
     @Html.AntiForgeryToken()
 
     <h3>Customer Information</h3>
 
-    if (!Request.IsAuthenticated)
-    {
+    if (Request.IsAuthenticated == false) {
         <div class="form-group">
             <label>Customer Name</label>
             <input type="text" name="CustomerName" required class="form-control" autocomplete="off" />
         </div>
         <div class="form-group">
             <label>Phone</label>
-            <input type="text" name="Phone" class="form-control" autocomplete="off" />
+            <input type="text" name="Phone" required class="form-control" autocomplete="off" />
         </div>
         <div class="form-group">
             <label>Address</label>
-            <input type="text" name="Address" class="form-control" autocomplete="off" />
+            <input type="text" name="Address" required class="form-control" autocomplete="off" />
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input type="text" name="Email" class="form-control" autocomplete="off" />
+            <input type="email" name="Email" required class="form-control" autocomplete="off" />
         </div>
-    }
-    else
-    {
+    } else {
         var user = (TopMarket.Models.ApplicationUser)ViewBag.User;
 
         <div class="form-group">
@@ -59,15 +59,15 @@
         </div>
         <div class="form-group">
             <label>Phone</label>
-            <input type="text" name="Phone" value="@user.Phone" class="form-control" autocomplete="off" />
+            <input type="text" name="Phone" value="@user.Phone" required class="form-control" autocomplete="off" />
         </div>
         <div class="form-group">
             <label>Address</label>
-            <input type="text" name="Address" class="form-control" autocomplete="off" />
+            <input type="text" name="Address" required class="form-control" autocomplete="off" />
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input type="text" name="Email" value="@user.Email" class="form-control" autocomplete="off" />
+            <input type="email" name="Email" value="@user.Email" required class="form-control" autocomplete="off" />
         </div>
     }
 
@@ -78,17 +78,20 @@
             <option value="2">Online Payment</option>
         </select>
     </div>
+
     <div class="form-group" id="load_form_payment" style="display:none;">
-        <h4> <label>Select payment methods:</label><br /></h4>
+        <h4>Select payment methods:</h4>
         <h5>Method 1: Switch to VnPay and choose payment method</h5>
-        <label><input type="radio" name="TypePaymentVN" value="0" checked /> VnPay QR Payment Gateway </label>
+        <label><input type="radio" name="TypePaymentVN" value="0" checked /> VnPay QR Payment Gateway</label>
         <h5>Method 2: Separate payment methods at Merchant's site</h5>
-        <label><input type="radio" name="TypePaymentVN" value="1" /> Payment via application supporting VNPAYQR </label><br />
-        <label><input type="radio" name="TypePaymentVN" value="2" /> ATM-Domestic bank account </label><br />
-        <label><input type="radio" name="TypePaymentVN" value="3" /> Payment via international card </label><br />
+        <label><input type="radio" name="TypePaymentVN" value="1" /> Payment via application supporting VNPAYQR</label><br />
+        <label><input type="radio" name="TypePaymentVN" value="2" /> ATM - Domestic bank account</label><br />
+        <label><input type="radio" name="TypePaymentVN" value="3" /> Payment via international card</label><br />
     </div>
+
     <div class="form-group" id="load_send"></div>
+
     <div class="form-group">
-        <button type="submit" class="btn btn-block btn-success" id="btnCheckOut">Check out</button>
+        <button type="submit" class="btn btn-block btn-success" id="btnCheckOut">Check Out</button>
     </div>
 }

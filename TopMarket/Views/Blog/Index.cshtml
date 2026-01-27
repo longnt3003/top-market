@@ -1,15 +1,16 @@
 ﻿@model PagedList.PagedList<TopMarket.Models.EntityFramework.Blog>
-@using PagedList.Mvc;
-@using PagedList;
+@using PagedList.Mvc
+@using PagedList
+
 @{
     ViewBag.Title = "Blog | TopMarket";
 }
-<link href="~/Content/PagedList.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css">
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_styles.css">
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_responsive.css">
 
-<!-- Slider -->
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_styles.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/contact_responsive.css" />
+
 <style>
     .news_section_container {
         margin-top: 180px;
@@ -31,7 +32,6 @@
         max-height: 100%;
     }
 
-    /* ----- Blog image CSS -----*/
     .blog-image {
         opacity: 1;
         transition: .5s ease;
@@ -41,65 +41,67 @@
     .img-box:hover .blog-image {
         opacity: 0.3;
     }
-
 </style>
 
 <div class="container contact_container">
     <div class="row">
         <div class="col">
-            <!-- Breadcrumbs -->
             <div class="breadcrumbs d-flex flex-row align-items-center">
                 <ul>
                     <li><a href="/home">Home</a></li>
-                    <li class="active"><a href="/blog"><i class="fa fa-angle-right" aria-hidden="true"></i>Blog</a></li>
+                    <li class="active">
+                        <a href="/blog"><i class="fa fa-angle-right" aria-hidden="true"></i> Blog</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
+
     <h1 class="text-center">Blog</h1>
-    <div class="proucts_iso">
+
+    <div class="products_iso mb-4">
         <h5>Search Blog</h5>
-        @using (Html.BeginForm("index", "Blog", FormMethod.Get, new { }))
+        @using (Html.BeginForm("Index", "Blog", FormMethod.Get))
         {
             <div class="input-group input-group-sm">
                 @Html.TextBox("Searchtext", null, new { @class = "form-control", @placeholder = "Enter keyword..." })
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat"> Search </button>
+                    <button type="submit" class="btn btn-info btn-flat">Search</button>
                 </span>
             </div>
         }
     </div>
-    <hr>
-    <br>
-    @if (Model != null && Model.Any())
-    {
-        foreach (var item in Model)
-        {
+
+    <hr />
+
+    @if (Model != null && Model.Any()) {
+        foreach (var item in Model) {
             <div class="row row-item-new">
                 <div class="col-md-3">
                     <div class="img-box">
-                        <a href="" title="@item.Title">
-                            <img class="blog-image" src="@item.Image" alt="@item.Title" style="border-radius:3px" />
+                        <a href="/@item.Alias-n@(item.Id)" title="@item.Title">
+                            <img class="blog-image img-fluid rounded" src="@item.Image" alt="@item.Title" />
                         </a>
                     </div>
                 </div>
                 <div class="col-md-9">
                     <div class="content-box">
-                        <h3><a href="/@item.Alias-n@(item.Id)" title="@item.Title">@item.Title</a></h3>
+                        <h3>
+                            <a href="/@item.Alias-n@(item.Id)" title="@item.Title">@item.Title</a>
+                        </h3>
                         <div class="description-box">
-                            <h5> @Html.Raw(item.Description)</h5>
+                            <h5>@Html.Raw(item.Description)</h5>
                         </div>
                     </div>
                 </div>
             </div>
         }
-        <div class="row">
+
+        <div class="row mt-4">
             <div class="col-6"></div>
-            <div class="col-6" style="text-align:right;">
+            <div class="col-6 text-right">
                 @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
             </div>
         </div>
     }
-
 </div>
-

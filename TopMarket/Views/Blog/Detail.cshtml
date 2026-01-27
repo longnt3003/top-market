@@ -1,10 +1,10 @@
 ﻿@model TopMarket.Models.EntityFramework.Blog
 @{
-    ViewBag.Title = Model.Title;
-
+    ViewBag.Title = Model?.Title ?? "Blog";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css">
-<!-- Slider -->
+
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css" />
+
 <style>
     .news_section_container {
         margin-top: 180px;
@@ -26,26 +26,34 @@
         max-height: 100%;
     }
 </style>
+
 <div class="container news_section_container">
-    @if (Model != null)
-    {
+    @if (Model != null) {
         <div class="row">
             <div class="col-md-12">
-                <h1 class="title-news"> @Model.Title</h1>
+                <h1 class="title-news">@Model.Title</h1>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <h4><strong> @Html.Raw(Model.Description) </strong></h4>
-            </div>
-            <div class="col-md-12">
-                <img src="@Model.Image" style="max-width: 40%; border-radius: 5px; display:flex; margin:20px auto" />
-            </div>
 
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h4><strong>@Html.Raw(Model.Description)</strong></h4>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12 text-center">
+                <img src="@Model.Image"
+                     alt="@Model.Title"
+                     class="img-fluid rounded"
+                     style="max-width: 40%; margin: 20px auto;" />
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-md-12">
                 @Html.Raw(Model.Detail)
             </div>
         </div>
     }
-
 </div>

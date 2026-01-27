@@ -1,12 +1,11 @@
-﻿
-@{
-    ViewBag.Title = "VnpayReturn";
+﻿@{
+    ViewBag.Title = "Vnpay Return";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_styles.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_responsive.css" />
 
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_styles.css">
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_responsive.css">
 <div class="container product_section_container">
     <div class="row">
         <div class="col product_section clearfix">
@@ -14,23 +13,32 @@
             <div class="breadcrumbs d-flex flex-row align-items-center">
                 <ul>
                     <li><a href="/home">Home</a></li>
-                    <li class="active"><a href="/"><i class="fa fa-angle-right" aria-hidden="true"></i>Checkout</a></li>
+                    <li class="active">
+                        <a href="/checkout"><i class="fa fa-angle-right"></i> Checkout</a>
+                    </li>
                 </ul>
             </div>
-            <!-- Sidebar -->
+
             <!-- Main Content -->
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <h1 class="">Checkout</h1>
-                    @if (ViewBag.PaymentSuccess != null)
-                    {
-                        <p>Payment successful. <strong> @ViewBag.PaymentSuccess</strong></p>
+                    <h1>Checkout Result</h1>
+
+                    @if (ViewBag.PaymentSuccess != null) {
+                        <p class="text-success">
+                            Payment successful: <strong>@ViewBag.PaymentSuccess</strong>
+                        </p>
+                    } else {
+                        <p class="text-danger">Payment failed or cancelled.</p>
                     }
                     <p>@ViewBag.InnerText</p>
+                    <div class="mt-3">
+                        <a href="/product" class="btn btn-primary">Continue Shopping</a>
+                        <a href="/account/profile" class="btn btn-secondary">View Orders</a>
+                    </div>
                 </div>
             </div>
             <hr />
         </div>
     </div>
 </div>
-

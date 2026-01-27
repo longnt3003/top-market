@@ -45,44 +45,44 @@
 					@using (Html.BeginForm("Add", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
 					{
 						@Html.AntiForgeryToken()
-						@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+						@Html.ValidationSummary(true, string.Empty, new { @class = "text-danger" })
 
 						<div class="form-group">
 							<label for="Title">Product Name</label>
 							@Html.TextBoxFor(x => x.Title, new { @class = "form-control", @id = "Title", @placeholder = "Product Name" })
-							@Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
+							@Html.ValidationMessageFor(x => x.Title, string.Empty, new { @class = "text-danger" })
 						</div>
 
 						<div class="form-group">
 							<label for="Alias">Alias</label>
 							@Html.TextBoxFor(x => x.Alias, new { @class = "form-control", @id = "Alias", @placeholder = "Alias" })
-							@Html.ValidationMessageFor(x => x.Alias, "", new { @class = "text-danger" })
+							@Html.ValidationMessageFor(x => x.Alias, string.Empty, new { @class = "text-danger" })
 						</div>
 
 						<div class="form-group">
 							<label for="ProductCode">SKU</label>
 							@Html.TextBoxFor(x => x.ProductCode, new { @class = "form-control", @id = "ProductCode", @placeholder = "Stock Keeping Unit" })
-							@Html.ValidationMessageFor(x => x.ProductCode, "", new { @class = "text-danger" })
+							@Html.ValidationMessageFor(x => x.ProductCode, string.Empty, new { @class = "text-danger" })
 						</div>
 
 						<div class="form-group">
 							<label for="ProductCategoryId">Category</label>
 							@Html.DropDownListFor(x => x.ProductCategoryId, ViewBag.ProductCategory as SelectList, "-Select Category-", new { @class = "form-control", @id = "ProductCategoryId" })
-							@Html.ValidationMessageFor(x => x.ProductCategoryId, "", new { @class = "text-danger" })
+							@Html.ValidationMessageFor(x => x.ProductCategoryId, string.Empty, new { @class = "text-danger" })
 						</div>
 
 						<div class="form-group">
 							<label for="demoPrice">Price</label>
 							<input type="text" id="demoPrice" class="form-control auto" value="0" />
 							@Html.HiddenFor(x => x.Price, new { @id = "Price" })
-							@Html.ValidationMessageFor(x => x.Price, "", new { @class = "text-danger" })
+							@Html.ValidationMessageFor(x => x.Price, string.Empty, new { @class = "text-danger" })
 						</div>
 
 						<div class="form-group">
 							<label for="demoPromotionPrice">Promotion Price</label>
 							<input type="text" id="demoPromotionPrice" class="form-control auto" value="0" />
 							@Html.HiddenFor(x => x.PromotionPrice, new { @id = "PromotionPrice" })
-							@Html.ValidationMessageFor(x => x.PromotionPrice, "", new { @class = "text-danger" })
+							@Html.ValidationMessageFor(x => x.PromotionPrice, string.Empty, new { @class = "text-danger" })
 						</div>
 
 						<div class="custom-control custom-checkbox">

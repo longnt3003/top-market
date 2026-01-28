@@ -1,23 +1,18 @@
 ﻿@{
-    ViewBag.Title = "TopMarket | Fresh Organic Food";
+    ViewBag.Title = "TopMarket | Fresh Orgnic Food";
     ViewBag.SeoDescription = "TopMarket";
 }
-
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css" />
-
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css">
 <!-- Slider -->
-<div class="main_slider" style="background-image:url(../Content/assets/images/thumb2.jpg)">
+
+<div class="main_slider" style="background-image: url(../Content/assets/images/thumb2.jpg)">
     <div class="container fill_height">
         <div class="row align-items-center fill_height">
             <div class="col">
-                <div class="main_slider_content text-center">
+                <div class="main_slider_content">
                     <h6>Your Organic Haven Awaits Online!</h6>
-                    <h1 class="bg-light rounded p-3" style="opacity:0.9">
-                        <strong>Get up to 30% off for new arrivals</strong>
-                    </h1>
-                    <div class="red_button shop_now_button">
-                        <a href="/product">Shop Now</a>
-                    </div>
+                    <h1 style="background-color:whitesmoke; opacity:0.9; border-radius:5px; padding: 10px"><strong>Get up to 30% off for new arrivals</strong></h1>
+                    <div class="red_button shop_now_button"><a href="/product">shop now</a></div>
                 </div>
             </div>
         </div>
@@ -28,19 +23,21 @@
 @Html.Action("MenuProductCategory", "Menu")
 
 <!-- New Arrivals -->
+
 <div class="new_arrivals">
     <div class="container">
         @Html.Action("MenuArrivals", "Menu")
     </div>
 </div>
 
-<!-- Deal of the Week -->
+<!-- Deal of the week -->
+
 <div class="deal_ofthe_week">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
-                <div class="deal_ofthe_week_img px-5">
-                    <img src="~/Content/assets/images/thumb.png" class="img-fluid float-right rounded" alt="Deal of the Week" />
+                <div class="deal_ofthe_week_img" style="padding:0 20%">
+                    <img src="~/Content/assets/images/thumb.png" style="float:right;max-width:100%; max-height:auto;" alt="">
                 </div>
             </div>
             <div class="col-lg-6 text-right deal_ofthe_week_col">
@@ -48,27 +45,25 @@
                     <div class="section_title">
                         <h2>Deal Of The Week</h2>
                     </div>
-                    <ul class="timer list-unstyled d-flex">
-                        <li class="d-inline-flex flex-column align-items-center mx-2">
+                    <ul class="timer">
+                        <li class="d-inline-flex flex-column justify-content-center align-items-center">
                             <div id="day" class="timer_num">03</div>
                             <div class="timer_unit">Day</div>
                         </li>
-                        <li class="d-inline-flex flex-column align-items-center mx-2">
+                        <li class="d-inline-flex flex-column justify-content-center align-items-center">
                             <div id="hour" class="timer_num">15</div>
                             <div class="timer_unit">Hours</div>
                         </li>
-                        <li class="d-inline-flex flex-column align-items-center mx-2">
+                        <li class="d-inline-flex flex-column justify-content-center align-items-center">
                             <div id="minute" class="timer_num">45</div>
                             <div class="timer_unit">Mins</div>
                         </li>
-                        <li class="d-inline-flex flex-column align-items-center mx-2">
+                        <li class="d-inline-flex flex-column justify-content-center align-items-center">
                             <div id="second" class="timer_num">23</div>
                             <div class="timer_unit">Sec</div>
                         </li>
                     </ul>
-                    <div class="red_button deal_ofthe_week_button">
-                        <a href="/product">Shop Now</a>
-                    </div>
+                    <div class="red_button deal_ofthe_week_button"><a href="/product">shop now</a></div>
                 </div>
             </div>
         </div>
@@ -77,23 +72,23 @@
 
 <!-- Best Sellers -->
 @Html.Action("Partial_ProductSales", "Products")
-
 <!-- Benefit -->
+
 <div class="benefit">
     <div class="container">
         <div class="row benefit_row">
             <div class="col-lg-3 benefit_col">
                 <div class="benefit_item d-flex flex-row align-items-center">
-                    <div class="benefit_icon"><i class="fa fa-truck"></i></div>
+                    <div class="benefit_icon"><i class="fa fa-truck" aria-hidden="true"></i></div>
                     <div class="benefit_content">
-                        <h6>Easy Delivery</h6>
+                        <h6>Easy delivery</h6>
                         <p>Home Delivery Service</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 benefit_col">
                 <div class="benefit_item d-flex flex-row align-items-center">
-                    <div class="benefit_icon"><i class="fa fa-money"></i></div>
+                    <div class="benefit_icon"><i class="fa fa-money" aria-hidden="true"></i></div>
                     <div class="benefit_content">
                         <h6>Easy Payment</h6>
                         <p>COD & Online Payment</p>
@@ -102,18 +97,18 @@
             </div>
             <div class="col-lg-3 benefit_col">
                 <div class="benefit_item d-flex flex-row align-items-center">
-                    <div class="benefit_icon"><i class="fa fa-undo"></i></div>
+                    <div class="benefit_icon"><i class="fa fa-undo" aria-hidden="true"></i></div>
                     <div class="benefit_content">
-                        <h6>Easy Returns</h6>
+                        <h6>Easy returns</h6>
                         <p>Return Defective Products</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 benefit_col">
                 <div class="benefit_item d-flex flex-row align-items-center">
-                    <div class="benefit_icon"><i class="fa fa-clock-o"></i></div>
+                    <div class="benefit_icon"><i class="fa fa-clock-o" aria-hidden="true"></i></div>
                     <div class="benefit_content">
-                        <h6>Easy Shopping</h6>
+                        <h6>Easy shopping</h6>
                         <p>24/7 Online Service</p>
                     </div>
                 </div>

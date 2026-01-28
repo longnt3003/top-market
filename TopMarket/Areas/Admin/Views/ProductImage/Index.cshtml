@@ -1,143 +1,121 @@
 ﻿@model IEnumerable<TopMarket.Models.EntityFramework.ProductImage>
 @{
-	ViewBag.Title = "Product Image";
-	Layout = "~/Areas/Admin/Views/Shared/_LayoutEmpty.cshtml";
+    ViewBag.Title = "Product Image";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutEmpty.cshtml";
+
+
 }
-
 <style>
-	.glImage {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-wrap: wrap;
-	}
+    .glImage {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
 
-		.glImage li {
-			display: inline-block;
-			position: relative;
-			margin: 10px;
-		}
-
-		.glImage img {
-			border: 1px solid #ddd;
-			border-radius: 4px;
-			padding: 5px;
-			background-color: #f9f9f9;
-		}
-
-	.box-btn {
-		position: absolute;
-		bottom: 5px;
-		left: 0;
-		width: 100%;
-		text-align: center;
-	}
-</style>
-
-<section class="content">
-	<div class="card">
-		<div class="card-header d-flex justify-content-between align-items-center">
-			<h3 class="card-title">Product Image</h3>
-			<div class="card-tools">
-				<button type="button" class="btn btn-danger" id="btnDeleteAll">Delete All</button>
-				<input type="button" value="Upload Image" class="btn btn-success" onclick="BrowseServer('txtImage');" />
-			</div>
-		</div>
-		<div class="card-body">
-			<ul class="glImage">
-				@if (Model != null && Model.Any())
-				{
-					foreach (var item in Model)
-					{
-						<li id="trow_@item.Id">
-							<img src="@item.Image" width="200" alt="Product image" />
-							<div class="box-btn">
-								<button type="button" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">
-									<i class="fa fa-trash"></i>
-								</button>
-								@if (item.IsDefault)
-								{
-									<button type="button" data-id="@item.Id" class="btn btn-sm btn-success btnDefault">
-										<i class="fa fa-check"></i>
-									</button>
-								}
-								else
-								{
-									<button type="button" data-id="@item.Id" class="btn btn-sm btn-warning btnDefault">Set Default</button>
-								}
-							</div>
-						</li>
-					}
-				}
-				else
-				{
-					<li class="text-muted">No product images available.</li>
-				}
-			</ul>
-		</div>
-		<div class="card-footer"></div>
-	</div>
-</section>
-
-@section scripts{
-	<script>
-        var productId = Number('@ViewBag.productId');
-
-        function BrowseServer(field) {
-            var finder = new CKFinder();
-            finder.selectActionFunction = function (fileUrl) {
-                AddImage(productId, fileUrl);
-            };
-            finder.popup();
+        .glImage li {
+            /*flex-direction:*/
+            display: inline-block;
+            position: relative;
         }
 
-        function AddImage(id, url) {
-            $.ajax({
-                url: '/admin/productimage/AddImage',
-                type: 'POST',
-                data: { productId: id, url: url },
-                success: function (rs) {
-                    if (rs.Success) {
-                        window.location.reload();
+    .box-btn {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+</style>
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Product Image</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-danger" title="Collapse">
+                    Delete all
+                </button>
+
+                <input type="button" value="Upload Image" class="btn btn-success" onclick="BrowseServer('txtImage');" />
+            </div>
+        </div>
+        <div class="card-body">
+            <ul class="glImage">
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <li id="trow_@item.Id">
+                            <img src="@item.Image" width="200" />
+                            <div class="box-btn">
+                                <a href="#" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete"><i class="fa fa-trash"></i></a>
+                                @if (item.IsDefault)
+                                {
+                                    <a href="#" data-id="@item.Id" class="btn btn-sm btn-success btnDefault"><i class="fa fa-check"></i></a>
+                                }
+                                else
+                                {
+                                    <a href="#" data-id="@item.Id" class="btn btn-sm btn-warning btnDefault"> X </a>
+                                }
+                            </div>
+                        </li>
                     }
                 }
-            });
-        }
+            </ul>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
 
-        $(function () {
-            // Delete single image
-            $('body').on('click', '.btnDelete', function () {
-                var id = $(this).data('id');
-                if (confirm('Are you sure you want to delete this image?')) {
-                    $.post('/admin/productimage/delete', { id: id }, function (rs) {
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+
+<script>
+    function BrowseServer(field) {
+        var finder = new CKFinder();
+        finder.selectActionFunction = function (fileUrl) {
+            debugger;
+            AddImage(@ViewBag.productId, fileUrl);
+        };
+        finder.popup();
+    }
+    function AddImage(id, url) {
+        debugger;
+        $.ajax({
+            url: '/admin/productimage/AddImage',
+            type: 'POST',
+            data: { productId: id, url: url },
+            success: function (rs) {
+                if (rs.Success) {
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    $(document).ready(function () {
+        $('body').on('click', '.btnDelete', function () {
+            var id = $(this).data('id');
+            var conf = confirm('Are you sure you want to delete this image?');
+            if (conf === true) {
+                $.ajax({
+                    url: '/admin/productimage/delete',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
                         if (rs.success) {
                             $('#trow_' + id).remove();
                         }
-                    });
-                }
-            });
-
-            // Set default image
-            $('body').on('click', '.btnDefault', function () {
-                var id = $(this).data('id');
-                $.post('/admin/productimage/setdefault', { id: id }, function (rs) {
-                    if (rs.success) {
-                        window.location.reload();
                     }
                 });
-            });
-
-            // Delete all images
-            $('#btnDeleteAll').on('click', function () {
-                if (confirm('Are you sure you want to delete all images?')) {
-                    $.post('/admin/productimage/deleteAll', { productId: productId }, function (rs) {
-                        if (rs.success) {
-                            window.location.reload();
-                        }
-                    });
-                }
-            });
+            }
         });
-	</script>
-}
+    });
+</script>

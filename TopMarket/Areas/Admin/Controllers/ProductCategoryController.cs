@@ -1,95 +1,75 @@
 ﻿using System;
-using System.Data.Entity;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using TopMarket.Models;
 using TopMarket.Models.EntityFramework;
-using CommonFilter = TopMarket.Models.Common.Filter;
 
 namespace TopMarket.Areas.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
-	public class ProductCategoryController : Controller
-	{
-		private readonly ApplicationDbContext db = new ApplicationDbContext();
+    public class ProductCategoryController : Controller
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
+        // GET: Admin/ProductCategory
+        public ActionResult Index()
+        {
+            var items = db.ProductCategories;
+            return View(items);
+        }
 
-		// GET: Admin/ProductCategory
-		public ActionResult Index()
-		{
-			var categories = db.ProductCategories.ToList();
-			return View(categories);
-		}
+        public ActionResult Add()
+        {
+            return View();
+        }
 
-		public ActionResult Add()
-		{
-			return View();
-		}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Add(ProductCategory model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.DateCreated = DateTime.Now;
+                model.DateModified = DateTime.Now;
+                model.Alias = TopMarket.Models.Common.Filter.FilterChar(model.Title);
+                db.ProductCategories.Add(model);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+        public ActionResult Edit(int id)
+        {
+            var item = db.ProductCategories.Find(id);
+            return View(item);
+        }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Add(ProductCategory model)
-		{
-			if (ModelState.IsValid)
-			{
-				model.DateCreated = DateTime.UtcNow;
-				model.DateModified = DateTime.UtcNow;
-				model.Alias = CommonFilter.FilterChar(model.Title);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(ProductCategory model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.DateModified = DateTime.Now;
+                model.Alias = TopMarket.Models.Common.Filter.FilterChar(model.Title);
+                db.ProductCategories.Attach(model);
+                db.Entry(model).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+        public ActionResult Delete(int id)
+        {
+            var item = db.ProductCategories.Find(id);
+            if (item != null)
+            {
+                db.ProductCategories.Remove(item);
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
 
-				db.ProductCategories.Add(model);
-				db.SaveChanges();
-				return RedirectToAction("Index");
-			}
-
-			return View(model);
-		}
-
-		public ActionResult Edit(int id)
-		{
-			var category = db.ProductCategories.Find(id);
-			if (category == null) return HttpNotFound();
-
-			return View(category);
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(ProductCategory model)
-		{
-			if (ModelState.IsValid)
-			{
-				var category = db.ProductCategories.Find(model.Id);
-				if (category == null) return HttpNotFound();
-
-				category.Title = model.Title;
-				category.Description = model.Description;
-				category.DateModified = DateTime.UtcNow;
-				category.Alias = CommonFilter.FilterChar(model.Title);
-
-				db.Entry(category).State = EntityState.Modified;
-				db.SaveChanges();
-				return RedirectToAction("Index");
-			}
-
-			return View(model);
-		}
-
-		public ActionResult Delete(int id)
-		{
-			var category = db.ProductCategories.Find(id);
-			if (category != null)
-			{
-				db.ProductCategories.Remove(category);
-				db.SaveChanges();
-				return Json(new { success = true });
-			}
-
-			return Json(new { success = false });
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing) db.Dispose();
-			base.Dispose(disposing);
-		}
-	}
+            return Json(new { success = false });
+        }
+    }
 }

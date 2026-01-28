@@ -1,65 +1,89 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
-using TopMarket.Models;
 using TopMarket.Models.EntityFramework;
+using TopMarket.Models;
 
 namespace TopMarket.Areas.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
-	public class SettingSystemController : Controller
-	{
-		private readonly ApplicationDbContext db = new ApplicationDbContext();
+    public class SettingSystemController : Controller
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
+        // GET: Admin/SettingSystem
+        public ActionResult Index()
+        {
+            return View();
+        }
 
-		// GET: Admin/SettingSystem
-		public ActionResult Index()
-		{
-			return View();
-		}
+        public ActionResult Partial_Setting()
+        {
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult AddSetting(SettingSystemViewModel req)
+        {
+            SystemSetting set = null;
+            var checkTitle = db.SystemSettings.FirstOrDefault(x => x.SettingKey.Contains("SettingTitle"));
+            if (checkTitle == null)
+            {
+                set = new SystemSetting();
+                set.SettingKey = "SettingTitle";
+                set.SettingValue = req.SettingTitle;
+                db.SystemSettings.Add(set);
+            }
+            else
+            {
+                checkTitle.SettingValue = req.SettingTitle;
+                db.Entry(checkTitle).State = System.Data.Entity.EntityState.Modified;
+            }
+            //logo
+            var checkLogo = db.SystemSettings.FirstOrDefault(x => x.SettingKey.Contains("SettingLogo"));
+            if (checkLogo == null)
+            {
+                set = new SystemSetting();
+                set.SettingKey = "SettingLogo";
+                set.SettingValue = req.SettingLogo;
+                db.SystemSettings.Add(set);
+            }
+            else
+            {
+                checkLogo.SettingValue = req.SettingLogo;
+                db.Entry(checkLogo).State = System.Data.Entity.EntityState.Modified;
+            }
+            //Email
+            var email = db.SystemSettings.FirstOrDefault(x => x.SettingKey.Contains("SettingEmail"));
+            if (email == null)
+            {
+                set = new SystemSetting();
+                set.SettingKey = "SettingEmail";
+                set.SettingValue = req.SettingEmail;
+                db.SystemSettings.Add(set);
+            }
+            else
+            {
+                email.SettingValue = req.SettingEmail;
+                db.Entry(email).State = System.Data.Entity.EntityState.Modified;
+            }
+            //Hotline
+            var Hotline = db.SystemSettings.FirstOrDefault(x => x.SettingKey.Contains("SettingHotline"));
+            if (Hotline == null)
+            {
+                set = new SystemSetting();
+                set.SettingKey = "SettingHotline";
+                set.SettingValue = req.SettingHotline;
+                db.SystemSettings.Add(set);
+            }
+            else
+            {
+                Hotline.SettingValue = req.SettingHotline;
+                db.Entry(Hotline).State = System.Data.Entity.EntityState.Modified;
+            }
+            
+            db.SaveChanges();
 
-		public ActionResult Partial_Setting()
-		{
-			var settings = db.SystemSettings.ToList();
-			return PartialView(settings);
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult AddSetting(SettingSystemViewModel req)
-		{
-			UpdateOrCreateSetting("SettingTitle", req.SettingTitle);
-			UpdateOrCreateSetting("SettingLogo", req.SettingLogo);
-			UpdateOrCreateSetting("SettingEmail", req.SettingEmail);
-			UpdateOrCreateSetting("SettingHotline", req.SettingHotline);
-
-			db.SaveChanges();
-			return View("Partial_Setting", db.SystemSettings.ToList());
-		}
-
-		private void UpdateOrCreateSetting(string key, string value)
-		{
-			var setting = db.SystemSettings.FirstOrDefault(x => x.SettingKey == key);
-			if (setting == null)
-			{
-				var newSetting = new SystemSetting
-				{
-					SettingKey = key,
-					SettingValue = value
-				};
-
-				db.SystemSettings.Add(newSetting);
-			}
-			else
-			{
-				setting.SettingValue = value;
-				db.Entry(setting).State = EntityState.Modified;
-			}
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing) db.Dispose();
-			base.Dispose(disposing);
-		}
-	}
+            return View("Partial_Setting");
+        }
+    }
 }

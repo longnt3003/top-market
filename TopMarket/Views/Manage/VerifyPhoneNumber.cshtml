@@ -4,33 +4,29 @@
 }
 
 <main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title</h2>
+    <h2 id="title">@ViewBag.Title.</h2>
 
     @using (Html.BeginForm("VerifyPhoneNumber", "Manage", FormMethod.Post, new { role = "form" }))
     {
         @Html.AntiForgeryToken()
-        @Html.Hidden("phoneNumber", Model.PhoneNumber)
-
+        @Html.Hidden("phoneNumber", @Model.PhoneNumber)
         <h4>Enter verification code</h4>
-        <h5 class="text-info">@ViewBag.Status</h5>
+        <h5>@ViewBag.Status</h5>
         <hr />
-        @Html.ValidationSummary(string.Empty, new { @class = "text-danger" })
-
-        <div class="row mb-3">
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="row">
             @Html.LabelFor(m => m.Code, new { @class = "col-md-2 col-form-label" })
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Code, string.Empty, new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="row">
             <div class="offset-md-2 col-md-10">
                 <input type="submit" class="btn btn-outline-dark" value="Submit" />
             </div>
         </div>
     }
-</main>
+</main>    
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -7,51 +7,44 @@
         UpdateTargetId = "load_review",
         OnSuccess = "OnSuccessRE",
         OnFailure = "OnFailureRE",
-        OnBegin = "OnBeginRE"
-    }, new { id = "review_form" }))
+        OnBegin = "OnBeginRE",
+
+    }, new { @Id = "review_form" }))
     {
         <script>
             function OnBeginRE() {
-                $('#review_submit').attr("disabled", "disabled");
-                $('#load_send').html('<h5>Loading...</h5>');
+                $('#btnCheckOut').attr("disabled", "disabled");
+                $('#load_send').html('<h2>Loading...</h2>');
             }
             function OnSuccessRE(res) {
                 if (res.Success) {
-                    $('#review_form')[0].reset();
-                    $('#review_submit').removeAttr("disabled");
+                    $('#review_form').reset();
                 }
-            }
-            function OnFailureRE() {
-                $('#load_send').html('<p class="text-danger">Failed to submit review. Please try again.</p>');
-                $('#review_submit').removeAttr("disabled");
             }
         </script>
 
         <div>
-            <h4>Add Review</h4>
+            <h1>Add Review</h1>
             @Html.TextBoxFor(x => x.FullName, new { @class = "form_input input_name", @placeholder = "Name", @id = "review_name" })
             @Html.TextBoxFor(x => x.Email, new { @class = "form_input input_email", @placeholder = "Email", @id = "review_email" })
             @Html.HiddenFor(x => x.UserName)
             @Html.HiddenFor(x => x.ProductId, new { @value = ViewBag.ProductId })
-            <input type="hidden" id="txtRate" name="Rate" value="4" />
+            <input type="text" id="txtRate" name="Rate" value="4" style="visibility:hidden;"/>
         </div>
-
         <div>
-            <h5>Your Rating:</h5>
+            <h1>Your Rating:</h1>
             <ul class="user_star_rating">
-                <li><i class="fa fa-star"></i></li>
-                <li><i class="fa fa-star"></i></li>
-                <li><i class="fa fa-star"></i></li>
-                <li><i class="fa fa-star"></i></li>
-                <li><i class="fa fa-star-o"></i></li>
+                <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
             </ul>
             @Html.TextAreaFor(x => x.Content, new { @class = "input_review", @rows = "4", @placeholder = "Your Review" })
         </div>
-
-        <div class="text-left text-sm-right mt-3">
-            <button id="review_submit" type="submit" class="red_button review_submit_btn trans_300">
-                Submit
-            </button>
+        <div class="text-left text-sm-right">
+            <button id="review_submit" type="submit" class="red_button review_submit_btn trans_300" value="Submit">submit</button>
         </div>
     }
 </div>
+

@@ -1,31 +1,30 @@
 ﻿@model IEnumerable<TopMarket.Models.ShoppingCartItem>
 @using TopMarket.Common
 
-@if (Model != null && Model.Any()) {
-    <h3>
-        Cart 
-        <span class="float-right">
-            <small>@Model.Count()</small>
-        </span>
-    </h3>
-
-    var totalPrice = decimal.Zero;
-
-    <div class="border p-2">
-        <table class="table table-sm">
-            @foreach (var item in Model) {
-                totalPrice += item.TotalPrice;
+@if (Model != null && Model.Any())
+{
+    <h3>Cart <span style="float:right;position:relative"><small>@Model.Count()</small></span></h3>
+    var i = 0;
+    var totalPricee = decimal.Zero;
+    <div style="border:1px solid #808080;">
+        <table class="table">
+            @foreach (var item in Model)
+            {
+                totalPricee += item.TotalPrice;
                 <tr>
                     <td>@item.ProductName</td>
                     <td>@Common.FormatNumber(item.Price, 0)</td>
                 </tr>
             }
-            <tr class="font-weight-bold">
+            <tr>
                 <td>Total Price</td>
-                <td>@Common.FormatNumber(totalPrice, 0)</td>
+                <td>@Common.FormatNumber(totalPricee, 0)</td>
             </tr>
         </table>
     </div>
-} else {
-    <div class="alert alert-warning">Your cart is empty!</div>
+
+}
+else
+{
+
 }

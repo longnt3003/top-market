@@ -3,23 +3,21 @@
 @{
     ViewBag.Title = "Order List";
 }
-
 @section naviheader{
+    <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-                <i class="fas fa-bars"></i>
-            </a>
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="/admin/home" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="/admin/order" class="nav-link">@ViewBag.Title</a>
+            <a href="/admin/order" class="nav-link">Order List</a>
         </li>
     </ul>
 }
-
+<!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -27,16 +25,19 @@
                 <h1>Order Management</h1>
             </div>
         </div>
-    </div>
+    </div><!-- /.container-fluid -->
 </section>
 
+<!-- Main content -->
 <section class="content">
+
+    <!-- Default box -->
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Order List</h3>
         </div>
         <div class="card-body">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -44,60 +45,74 @@
                         <th>Customer Name</th>
                         <th>Phone</th>
                         <th>Grand Total</th>
-                        <th>Payment Method</th>
+                        <th>Payment Methods</th>
                         <th>Status</th>
                         <th>Date Created</th>
-                        <th style="width:150px;">Actions</th>
+                        <th></th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    @if (Model != null && Model.Any()) {
+                    @if (Model != null && Model.Any())
+                    {
                         var i = ((ViewBag.Page - 1) * ViewBag.PageSize) + 1;
-                        foreach (var item in Model) {
-                            <tr id="trow_@item.Id">
+                        foreach (var item in Model)
+                        {
+                            <tr>
                                 <td>@i</td>
                                 <td>@item.Code</td>
                                 <td>@item.CustomerName</td>
                                 <td>@item.Phone</td>
                                 <td>@TopMarket.Common.Common.FormatNumber(item.TotalAmmount, 0)</td>
-                                <td>@(item.PaymentMethods == 1 ? "COD" : "Transfer")</td>
+                                <td>@(item.PaymentMethods==1?"COD":"Transfer")</td>
                                 <td>
-                                    @if (item.Status == 1) {
-                                        <span class="badge badge-warning">Unpaid</span>
-                                    } else if (item.Status == 2) {
-                                        <span class="badge badge-info">Paid</span>
-                                    } else if (item.Status == 3) {
-                                        <span class="badge badge-success">Complete</span>
-                                    } else if (item.Status == 4) {
-                                        <span class="badge badge-danger">Cancel</span>
+                                    @if (item.Status == 1)
+                                    {
+                                        <span>Unpaid</span>
+                                    }
+                                    @if (item.Status == 2)
+                                    {
+                                        <span>Paid</span>
+                                    }
+                                    @if (item.Status == 3)
+                                    {
+                                        <span>Complete</span>
+                                    }
+                                    @if (item.Status == 4)
+                                    {
+                                        <span>Cancel</span>
                                     }
                                 </td>
+
                                 <td>@item.DateCreated.ToString("dd/MM/yyyy")</td>
                                 <td>
                                     <a href="/admin/order/view/@item.Id" class="btn btn-sm btn-success">View</a>
-                                    <button type="button" class="btn btn-sm btn-danger btnUpdatee" data-id="@item.Id">Update</button>
+                                    <a href="#" class="btn btn-sm btn-danger btnUpdatee" data-id="@item.Id">Update</a>
                                 </td>
                             </tr>
                             i++;
                         }
-                    } else {
-                        <tr>
-                            <td colspan="9" class="text-center text-muted">No orders found</td>
-                        </tr>
                     }
                 </tbody>
             </table>
 
             <div class="row">
                 <div class="col-6"></div>
-                <div class="col-6 text-right">
+                <div class="col-6" style="text-align:right;">
                     @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
                 </div>
             </div>
         </div>
-        <div class="card-footer"></div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
     </div>
+    <!-- /.card -->
+
 </section>
+<!-- /.content -->
 
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
@@ -111,25 +126,28 @@
             <div class="modal-body">
                 <input type="hidden" id="txtOrderId" value="0" />
                 <div class="form-group">
-                    <label for="ddStatus">Status</label>
+                    <label>Status</label>
                     <select class="form-control" id="ddStatus">
-                        <option value="2">Paid</option>
-                        <option value="3">Complete</option>
-                        <option value="4">Cancel</option>
+                        <option value="2">
+                            The order has been paid!
+                        </option>
                     </select>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="btnSave">Save</button>
             </div>
         </div>
+        <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
 </div>
+<!-- /.modal -->
 
 @section scripts{
     <script>
-        $(function () {
+        $(document).ready(function () {
             $('body').on('click', '.btnUpdatee', function () {
                 var id = $(this).data("id");
                 $('#txtOrderId').val(id);
@@ -138,11 +156,11 @@
 
             $('body').on('click', '#btnSave', function () {
                 var id = $('#txtOrderId').val();
-                var status = $('#ddStatus').val();
+                var tt = $('#ddStatus').val();
                 $.ajax({
                     url: '/admin/order/UpdateStatus',
                     type: 'POST',
-                    data: { id: id, status: status },
+                    data: { id: id, status: tt },
                     success: function (res) {
                         if (res.Success) {
                             location.reload();

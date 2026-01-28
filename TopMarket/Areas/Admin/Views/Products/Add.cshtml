@@ -1,173 +1,265 @@
 ﻿@model TopMarket.Models.EntityFramework.Product
 
 @{
-	ViewBag.Title = "Add Product";
-	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Add Product";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-@section naviheader {
-	<ul class="navbar-nav">
-		<li class="nav-item">
-			<a class="nav-link" data-widget="pushmenu" href="#" role="button">
-				<i class="fas fa-bars"></i>
-			</a>
-		</li>
-		<li class="nav-item d-none d-sm-inline-block">
-			<a href="/admin/home" class="nav-link">Home</a>
-		</li>
-		<li class="nav-item d-none d-sm-inline-block">
-			<a href="/admin/product" class="nav-link">Product Management</a>
-		</li>
-		<li class="nav-item d-none d-sm-inline-block">
-			<a href="/admin/product/add" class="nav-link">Add Product</a>
-		</li>
-	</ul>
+
+@section naviheader   {
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/blog" class="nav-link">Product Management</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/blog/add" class="nav-link">Add Product</a>
+        </li>
+    </ul>
 }
 
+<!-- Content Header (Page header) -->
 <section class="content-header">
-	<div class="container-fluid">
-		<div class="row mb-2">
-			<div class="col-sm-6">
-				<h1>@ViewBag.Title</h1>
-			</div>
-		</div>
-	</div>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Add Product</h1>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
 </section>
 
+<!-- Main content -->
 <section class="content">
-	<div class="card">
-		<div class="card-header">
-			<h3 class="card-title">New Product Information</h3>
-		</div>
-		<div class="card-body">
-			<div class="row">
-				<div class="col-md-12">
-					@using (Html.BeginForm("Add", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
-					{
-						@Html.AntiForgeryToken()
-						@Html.ValidationSummary(true, string.Empty, new { @class = "text-danger" })
 
-						<div class="form-group">
-							<label for="Title">Product Name</label>
-							@Html.TextBoxFor(x => x.Title, new { @class = "form-control", @id = "Title", @placeholder = "Product Name" })
-							@Html.ValidationMessageFor(x => x.Title, string.Empty, new { @class = "text-danger" })
-						</div>
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">New Product Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    @using (Html.BeginForm("Add", "Products", FormMethod.Post, new { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Basic Information</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Image</a></li>
+                                </ul>
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="activity">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Product Name</label>
+                                            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @placeholder = "Product Name" })
+                                            @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Alias</label>
+                                            @Html.TextBoxFor(x => x.Alias, new { @class = "form-control", @placeholder = "Alias" })
+                                            @Html.ValidationMessageFor(x => x.Alias, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">SKU</label>
+                                            @Html.TextBoxFor(x => x.ProductCode, new { @class = "form-control", @placeholder = "Stock Keeping Unit" })
+                                            @Html.ValidationMessageFor(x => x.ProductCode, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Category</label>
+                                            @Html.DropDownListFor(x => x.ProductCategoryId, ViewBag.ProductCategory as SelectList, "-Select Category-", new { @class = "form-control", @placeholder = "Product Category" })
+                                            @Html.ValidationMessageFor(x => x.ProductCategoryId, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Product Description</label>
+                                            @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Product Description" })
+                                            @Html.ValidationMessageFor(x => x.Description, null, new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Product Detail</label>
+                                            @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail" })
+                                            @Html.ValidationMessageFor(x => x.Detail, null, new { @class = "text-danger" })
+                                        </div>
 
-						<div class="form-group">
-							<label for="Alias">Alias</label>
-							@Html.TextBoxFor(x => x.Alias, new { @class = "form-control", @id = "Alias", @placeholder = "Alias" })
-							@Html.ValidationMessageFor(x => x.Alias, string.Empty, new { @class = "text-danger" })
-						</div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Quantity</label>
+                                                    @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control", @placeholder = "Product Quantity", @Value = "1" })
+                                                    @Html.ValidationMessageFor(x => x.Quantity, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Price</label>
+                                                    <input type="text" name="demoPrice" value="0" id="demoPrice" class="form-control auto" data-a-dec="," data-a-sep=".">
+                                                    @Html.HiddenFor(x => x.Price, new { @class = "", @placeholder = "Price" })
+                                                    @Html.ValidationMessageFor(x => x.Price, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Promotion Price</label>
+                                                    <input type="text" name="demoPromotionPrice" id="demoPromotionPrice" value="0" class="form-control auto">
+                                                    @Html.HiddenFor(x => x.PromotionPrice, new { @class = "form-control", @placeholder = "Promotion Price" })
+                                                    @Html.ValidationMessageFor(x => x.PromotionPrice, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
 
-						<div class="form-group">
-							<label for="ProductCode">SKU</label>
-							@Html.TextBoxFor(x => x.ProductCode, new { @class = "form-control", @id = "ProductCode", @placeholder = "Stock Keeping Unit" })
-							@Html.ValidationMessageFor(x => x.ProductCode, string.Empty, new { @class = "text-danger" })
-						</div>
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(x => x.IsActive, new { @class = "custom-control-input", @id = "customCheckbox2", @checked = "checked" })
+                                                        <label for="customCheckbox2" class="custom-control-label">Display</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(x => x.IsHot, new { @class = "custom-control-input", @id = "IsHotCheckbox2" })
+                                                        <label for="IsHotCheckbox2" class="custom-control-label">Hot</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(x => x.IsFeature, new { @class = "custom-control-input", @id = "IsFeatureCheckbox2" })
+                                                        <label for="IsFeatureCheckbox2" class="custom-control-label">Featured</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(x => x.IsSale, new { @class = "custom-control-input", @id = "IsSaleCheckbox2" })
+                                                        <label for="IsSaleCheckbox2" class="custom-control-label">On Sale</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="timeline">
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <input type="button" class="btn btn-primary" id="iUploadImg" onClick="BrowseServer()" value="Upload" />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <table class="table table-hover" id="tbProductImg">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">ID</th>
+                                                            <th class="text-center">Thumb</th>
+                                                            <th class="text-center">Image</th>
+                                                            <th class="text-center"></th>
 
-						<div class="form-group">
-							<label for="ProductCategoryId">Category</label>
-							@Html.DropDownListFor(x => x.ProductCategoryId, ViewBag.ProductCategory as SelectList, "-Select Category-", new { @class = "form-control", @id = "ProductCategoryId" })
-							@Html.ValidationMessageFor(x => x.ProductCategoryId, string.Empty, new { @class = "text-danger" })
-						</div>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbHtml">
+                                                    </tbody>
+                                                </table>
+                                                <input type="hidden" value="0" id="tCurrentId" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">Add New</button>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
 
-						<div class="form-group">
-							<label for="demoPrice">Price</label>
-							<input type="text" id="demoPrice" class="form-control auto" value="0" />
-							@Html.HiddenFor(x => x.Price, new { @id = "Price" })
-							@Html.ValidationMessageFor(x => x.Price, string.Empty, new { @class = "text-danger" })
-						</div>
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
 
-						<div class="form-group">
-							<label for="demoPromotionPrice">Promotion Price</label>
-							<input type="text" id="demoPromotionPrice" class="form-control auto" value="0" />
-							@Html.HiddenFor(x => x.PromotionPrice, new { @id = "PromotionPrice" })
-							@Html.ValidationMessageFor(x => x.PromotionPrice, string.Empty, new { @class = "text-danger" })
-						</div>
-
-						<div class="custom-control custom-checkbox">
-							@Html.CheckBoxFor(x => x.IsActive, new { @class = "custom-control-input", @id = "IsActive" })
-							<label for="IsActive" class="custom-control-label">Display</label>
-						</div>
-
-						<button type="submit" class="btn btn-success">Add New</button>
-					}
-				</div>
-			</div>
-		</div>
-		<div class="card-footer text-center">
-			<small class="text-muted">
-				&copy; @DateTime.Now.Year TopMarket | Admin Panel
-			</small>
-		</div>
-	</div>
 </section>
+<!-- /.content -->
 
 @section scripts{
-	<script>
-		$(function () {
-			$('.auto').autoNumeric('init');
+    <script>
+        $(document).ready(function () {
+            $('.auto').autoNumeric('init');
+            $('#demoPrice').bind('blur focusout keypress keyup', function () {
+                var demoGet = $('#demoPrice').autoNumeric('get');
+                $('#Price').val(demoGet);
+                $('#Price').autoNumeric('set', demoGet);
+            });
+            $('#demoPromotionPrice').bind('blur focusout keypress keyup', function () {
+                var demoGet = $('#demoPromotionPrice').autoNumeric('get');
+                $('#PromotionPrice').val(demoGet);
+                $('#PromotionPrice').autoNumeric('set', demoGet);
+            });
 
-			$('#demoPrice').on('blur focusout keypress keyup', function () {
-				var demoGet = $('#demoPrice').autoNumeric('get');
-				$('#Price').val(demoGet);
-			});
+            CKEDITOR.replace('txtDetail', {
+                customConfig: '/content/ckeditor/config.js',
+                extraAllowedContent: 'span',
+            });
 
-			$('#demoPromotionPrice').on('blur focusout keypress keyup', function () {
-				var demoGet = $('#demoPromotionPrice').autoNumeric('get');
-				$('#PromotionPrice').val(demoGet);
-			});
-
-			if ($('#txtDetail').length) {
-				CKEDITOR.replace('txtDetail', {
-					customConfig: '/content/ckeditor/config.js',
-					extraAllowedContent: 'span',
-				});
-			}
-
-			$('body').on('click', '.btnDeleteImg', function (e) {
-				e.preventDefault();
-				if (confirm('Are you sure you want to delete this image?')) {
-					var _id = $(this).data('id');
-					$('#trow_' + _id).fadeOut('fast', function () {
-						$(this).remove();
-					});
-				}
-			});
-		});
-
-		// BrowseServer
-		function BrowseServer(field) {
-			var finder = new CKFinder();
-			finder.selectActionFunction = function (fileUrl) {
-				addImageProduct(fileUrl);
-			};
-			finder.popup();
-		}
-
-		// Add image row
-		function addImageProduct(url) {
-			var temp = $('#tCurrentId').val();
-			var currentId = parseInt(temp) + 1;
-
-			var str = `
-					<tr id="trow_${currentId}">
-						<td class="text-center">${currentId}</td>
-						<td class="text-center">
-							<img width="50" src="${url}" />
-							<input type="hidden" value="${url}" name="Images"/>
-						</td>
-						<td class="text-center">
-							<input type="radio" name="rDefault" value="${currentId}" ${currentId === 1 ? 'checked' : ''}/>
-						</td>
-						<td class="text-center">
-							<a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnDeleteImg">Delete</a>
-						</td>
-					</tr>`;
-
-			$('#tbHtml').append(str);
-			$('#tCurrentId').val(currentId);
-		}
-	</script>
+            $('body').on('click', '.btnDeleteImg', function () {
+                var conf = confirm('Are you sure you want to delete this image?');
+                if (conf === true) {
+                    var _id = $(this).data('id');
+                    $('#trow_' + _id).fadeTo('fast', 0.5, function () {
+                        $(this).slideUp('fast', function () { $(this).remove(); });
+                    });
+                    var temp = $('#tCurrentId').val();
+                    var currentId = parseInt(temp) - 1;
+                    $('#tCurrentId').val(currentId);
+                }
+            });
+        });
+        function BrowseServer(field) {
+            var finder = new CKFinder();
+            finder.selectActionFunction = function (fileUrl) {
+                addImageProduct(fileUrl);
+            };
+            finder.popup();
+        }
+        function addImageProduct(url) {
+            var temp = $('#tCurrentId').val();
+            var currentId = parseInt(temp) + 1;
+            var str = "";
+            if (currentId == 1) {
+                str += `<tr id="trow_${currentId}">
+                                    <td class="text-center">${currentId}</td>
+                                    <td class="text-center"><img width="50" src="${url}" /> <input type='hidden' value="${url}" name="Images"/></td>
+                                    <td class="text-center"><input type="radio" name="rDefault" value="${currentId}" checked="checked"/></td>
+                                    <td class="text-center"><a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnDeleteImg">Delete</a></td>
+                                    </tr>`;
+            }
+            else {
+                str += `<tr id="trow_${currentId}">
+                                    <td class="text-center">${currentId}</td>
+                                    <td class="text-center"><img width="50" src="${url}" /> <input type='hidden' value="${url}" name="Images"/></td>
+                                    <td class="text-center"><input type="radio" name="rDefault" value="${currentId}"/></td>
+                                    <td class="text-center"><a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnDeleteImg">Delete</a></td>
+                                    </tr>`;
+            }
+            $('#tbHtml').append(str);
+            $('#tCurrentId').val(currentId);
+        }
+    </script>
 }
-

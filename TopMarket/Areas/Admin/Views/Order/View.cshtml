@@ -1,45 +1,101 @@
-﻿@model IEnumerable<TopMarket.Models.EntityFramework.OrderDetail>
-
-@if (Model != null && Model.Any()) {
-    var i = 1;
-    decimal grandTotal = 0;
-
-    <table class="table table-bordered table-hover">
-        <thead class="thead-light">
-            <tr>
-                <th>#</th>
-                <th>Product Name</th>
-                <th class="text-right">Price</th>
-                <th class="text-center">Quantity</th>
-                <th class="text-right">Total Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model) {
-                var totalPrice = item.Price * item.Quantity;
-                grandTotal += totalPrice;
-
-                <tr>
-                    <td>@i</td>
-                    <td>@item.Product.Title</td>
-                    <td class="text-right">@TopMarket.Common.Common.FormatNumber(item.Price, 0)</td>
-                    <td class="text-center">@item.Quantity</td>
-                    <td class="text-right">@TopMarket.Common.Common.FormatNumber(totalPrice, 0)</td>
-                </tr>
-                i++;
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="4" class="text-right font-weight-bold">Grand Total</td>
-                <td class="text-right font-weight-bold">
-                    @TopMarket.Common.Common.FormatNumber(grandTotal, 0)
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-} else {
-    <div class="alert alert-info text-center">
-        No order details available.
-    </div>
+﻿@model TopMarket.Models.EntityFramework.Order
+@using PagedList;
+@{
+    ViewBag.Title = "Order Detail";
 }
+@section naviheader{
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Order Detail</a>
+        </li>
+    </ul>
+}
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Order Detail</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Order ID</label>
+                        <p class="form-control">@Model.Code</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <p class="form-control">@Model.CustomerName</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Total</label>
+                        <p class="form-control">@TopMarket.Common.Common.FormatNumber(Model.TotalAmmount, 0) VND</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <p class="form-control">@Model.Phone</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Date Create</label>
+                        <p class="form-control">@Model.DateCreated.ToString("dd/MM/yyyy")</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <p class="form-control">@Model.Email</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <p class="form-control">@(Model.PaymentMethods == 1 ? "Unpaid" : "Paid")</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h2>Product List</h2>
+                </div>
+                <div class="col-12">
+                    @Html.Action("Partial_Product", "Order", new { id = Model.Id })
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->

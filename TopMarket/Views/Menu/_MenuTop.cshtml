@@ -1,14 +1,15 @@
-﻿@model IEnumerable<TopMarket.Models.EntityFramework.Category>
+﻿@model IEnumerable<TopMarket.Models.EntityFramework.MenuCategory>
 
-@if (Model != null && Model.Any()) {
-    <ul class="navbar_menu">
-        @foreach (var item in Model) {
-            if (item.Alias.Equals("home")) {
-                item.Alias = string.Empty;
-            } if (string.IsNullOrEmpty(item.Link) == false) {
-                item.Alias = item.Link;
-            }
-            <li><a href="/@item.Alias">@item.Title</a></li>
-        }
-    </ul>
+@if (Model != null && Model.Any())
+{
+	<ul class="navbar_menu">
+		@foreach (var item in Model)
+		{
+			if (item.Alias.Equals("home"))
+			{
+				item.Alias = string.Empty;
+			}
+			<li><a href="/@item.Alias">@item.Title</a></li>
+		}
+	</ul>
 }

@@ -1,92 +1,69 @@
-﻿@using TopMarket.Common
+﻿
+@using TopMarket.Common
 @using (Ajax.BeginForm("AddSetting", "SettingSystem", new AjaxOptions
 {
-	OnBegin = "OnBegin",
-	OnSuccess = "OnSuccess",
-	OnFailure = "OnFailure"
+    OnBegin = "OnBegin",
+    OnSuccess = "OnSuccess",
+    OnFailure = "OnFailure"
 }))
 {
-	<script>
-		function OnBegin() {
-			$('#load_page').html('Saving...');
-		}
-		function OnSuccess(rs) {
-			$('#load_page').html('Saved successfully.');
-		}
-		function OnFailure(rs) {
-			$('#load_page').html('Error occurred while saving.');
-		}
-	</script>
+    <script>
+        function OnBegin() {
+            $('#load_page').html('Saving...');
+        }
+        function OnSuccess(rs) {
+            $('#load_page').html('...');
+        }
+        function OnFailure(rs) {
 
-	@Html.AntiForgeryToken()
-	@Html.ValidationSummary(true, string.Empty, new { @class = "text-danger" })
+        }
+    </script>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Basic Information</a></li>
+                    </ul>
+                </div><!-- /.card-header -->
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="activity">
+                            <div class="form-group">
+                                <label>Page Title</label>
+                                <input type="text" name="SettingTitle" class="form-control" value="@SettingHelper.GetValue("SettingTitle")" />
+                            </div>
+                            <div class="form-group">
+                                <label>Logo</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="text" value="@SettingHelper.GetValue("SettingLogo")" name="SettingLogo" id="txtSettingLogo" class="form-control" />
+                                    </div>
+                                    <div class="input-group-append">
+                                        <input type="button" value="Upload Image" onclick="BrowseServer('txtSettingLogo');" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Hotline</label>
+                                <input type="text" value="@SettingHelper.GetValue("SettingHotline")" name="SettingHotline" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" value="@SettingHelper.GetValue("SettingEmail")" name="SettingEmail" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div>
+                <button type="submit" class="btn btn-success">Save</button>
+            </div>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="col-12">
-			<div class="card">
-				<div class="card-header p-2">
-					<ul class="nav nav-pills">
-						<li class="nav-item">
-							<a class="nav-link active" href="#activity" data-toggle="tab">Basic Information</a>
-						</li>
-					</ul>
-				</div>
-				<div class="card-body">
-					<div class="tab-content">
-						<div class="active tab-pane" id="activity">
-							<div class="form-group">
-								<label for="SettingTitle">Page Title</label>
-								<input
-									id="SettingTitle"
-									name="SettingTitle"
-									type="text"
-									class="form-control"
-									value="@SettingHelper.GetValue("SettingTitle")" />
-							</div>
-							<div class="form-group">
-								<label for="txtSettingLogo">Logo</label>
-								<div class="input-group">
-									<input
-										id="txtSettingLogo"
-										name="SettingLogo"
-										type="text"
-										class="form-control"
-										value="@SettingHelper.GetValue("SettingLogo")" />
-									<div class="input-group-append">
-										<input
-											type="button"
-											value="Upload Image"
-											class="btn btn-info"
-											onclick="BrowseServer('txtSettingLogo');" />
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="SettingHotline">Hotline</label>
-								<input
-									id="SettingHotline"
-									name="SettingHotline"
-									type="text"
-									class="form-control"
-									value="@SettingHelper.GetValue("SettingHotline")" />
-							</div>
-							<div class="form-group">
-								<label for="SettingEmail">Email</label>
-								<input
-									id="SettingEmail"
-									name="SettingEmail"
-									type="text"
-									class="form-control"
-									value="@SettingHelper.GetValue("SettingEmail")" />
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-12">
-			<button type="submit" class="btn btn-success">Save</button>
-			<a href="/admin/settingsystem" class="btn btn-danger">Back</a>
-		</div>
-	</div>
 }

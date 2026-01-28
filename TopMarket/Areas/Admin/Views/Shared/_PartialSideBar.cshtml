@@ -1,7 +1,10 @@
-﻿<!-- Sidebar -->
+﻿    <!-- Sidebar -->
 <div class="sidebar">
+    <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+            with font-awesome or any other icon font library -->
             <li class="nav-item">
                 <a href="/admin/category" class="nav-link">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -14,9 +17,9 @@
                     <p>Blog Management</p>
                 </a>
             </li>
-            <li class="nav-item has-treeview">
+            <li class="nav-item">
                 <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-box"></i>
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>
                         Product Management
                         <i class="right fas fa-angle-left"></i>
@@ -30,52 +33,67 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/product" class="nav-link">
+                        <a href="/admin/products" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Product</p>
                         </a>
                     </li>
+
                 </ul>
             </li>
+
             <li class="nav-item">
                 <a href="/admin/order" class="nav-link">
-                    <i class="nav-icon fas fa-shopping-cart"></i>
+                    <i class="nav-icon fas fa-th"></i>
                     <p>Order Management</p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="/admin/role" class="nav-link">
-                    <i class="nav-icon fas fa-user-shield"></i>
-                    <p>Role Management</p>
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Role Management
+                    </p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="/admin/account" class="nav-link">
-                    <i class="nav-icon fas fa-users"></i>
-                    <p>Account Management</p>
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Account Management
+                        @*<span class="right badge badge-danger">New</span>*@
+                    </p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="/admin/settingsystem" class="nav-link">
-                    <i class="nav-icon fas fa-cogs"></i>
-                    <p>System Configuration</p>
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        System Configuration
+                        @*<span class="right badge badge-danger">New</span>*@
+                    </p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="javascript:document.getElementById('logOffForm').submit()" class="nav-link">
-                    <i class="nav-icon fas fa-sign-out-alt"></i>
-                    <p>Logout</p>
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Logout
+                        @*<span class="right badge badge-danger">New</span>*@
+                    </p>
                 </a>
             </li>
         </ul>
     </nav>
+    <!-- /.sidebar-menu -->
 </div>
+<!-- /.sidebar -->
 
-@if (Request.IsAuthenticated) {
+
+@if (Request.IsAuthenticated)
+{
     <div style="display:none">
-        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logOffForm" }))
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @id = "logOffForm" }))
         {
-            @Html.AntiForgeryToken()
-        }
-    </div>
-}
+            @Html.AntiForgeryToken()}
+    </div>}

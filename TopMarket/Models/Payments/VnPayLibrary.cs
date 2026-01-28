@@ -1,144 +1,167 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 
 namespace TopMarket.Models.Payments
 {
-	public class VnPayLibrary
-	{
-		public const string VERSION = "2.1.0";
+    public class VnPayLibrary
+    {
+        public const string VERSION = "2.1.0";
+        private SortedList<String, String> _requestData = new SortedList<String, String>(new VnPayCompare());
+        private SortedList<String, String> _responseData = new SortedList<String, String>(new VnPayCompare());
 
-		private readonly SortedList<string, string> _requestData = new SortedList<string, string>(new VnPayCompare());
-		private readonly SortedList<string, string> _responseData = new SortedList<string, string>(new VnPayCompare());
+        public void AddRequestData(string key, string value)
+        {
+            if (!String.IsNullOrEmpty(value))
+            {
+                _requestData.Add(key, value);
+            }
+        }
 
-		public void AddRequestData(string key, string value)
-		{
-			if (string.IsNullOrWhiteSpace(value) == false) _requestData[key] = value.Trim();
-		}
+        public void AddResponseData(string key, string value)
+        {
+            if (!String.IsNullOrEmpty(value))
+            {
+                _responseData.Add(key, value);
+            }
+        }
 
-		public void AddResponseData(string key, string value)
-		{
-			if (string.IsNullOrWhiteSpace(value) == false) _responseData[key] = value.Trim();
-		}
+        public string GetResponseData(string key)
+        {
+            string retValue;
+            if (_responseData.TryGetValue(key, out retValue))
+            {
+                return retValue;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
 
-		public string GetResponseData(string key)
-		{
-			return _responseData.TryGetValue(key, out var retValue)
-				? retValue
-				: string.Empty;
-		}
+        #region Request
 
-		#region Request
-		public string CreateRequestUrl(string baseUrl, string vnp_HashSecret)
-		{
-			var data = new StringBuilder();
-			foreach (var kv in _requestData)
-			{
-				if (string.IsNullOrEmpty(kv.Value) == false)
-				{
-					data.Append(HttpUtility.UrlEncode(kv.Key) + "=" + HttpUtility.UrlEncode(kv.Value) + "&");
-				}
-			}
+        public string CreateRequestUrl(string baseUrl, string vnp_HashSecret)
+        {
+            StringBuilder data = new StringBuilder();
+            foreach (KeyValuePair<string, string> kv in _requestData)
+            {
+                if (!String.IsNullOrEmpty(kv.Value))
+                {
+                    data.Append(WebUtility.UrlEncode(kv.Key) + "=" + WebUtility.UrlEncode(kv.Value) + "&");
+                }
+            }
+            string queryString = data.ToString();
 
-			var queryString = data.ToString();
-			if (queryString.EndsWith("&"))
-			{
-				queryString = queryString.Substring(0, queryString.Length - 1);
-			}
+            baseUrl += "?" + queryString;
+            String signData = queryString;
+            if (signData.Length > 0)
+            {
 
-			var vnp_SecureHash = Utils.HmacSHA512(vnp_HashSecret, queryString);
-			return $"{baseUrl}?{queryString}&vnp_SecureHash={vnp_SecureHash}";
-		}
-		#endregion
+                signData = signData.Remove(data.Length - 1, 1);
+            }
+            string vnp_SecureHash = Utils.HmacSHA512(vnp_HashSecret, signData);
+            baseUrl += "vnp_SecureHash=" + vnp_SecureHash;
 
-		#region ResponseProcess
-		public bool ValidateSignature(string inputHash, string secretKey)
-		{
-			var rspRaw = BuildResponseData();
-			var myChecksum = Utils.HmacSHA512(secretKey, rspRaw);
-			return myChecksum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
-		}
+            return baseUrl;
+        }
 
-		private string BuildResponseData()
-		{
-			var data = new StringBuilder();
 
-			_responseData.Remove("vnp_SecureHashType");
-			_responseData.Remove("vnp_SecureHash");
 
-			foreach (var kv in _responseData)
-			{
-				if (string.IsNullOrEmpty(kv.Value) == false)
-				{
-					data.Append(HttpUtility.UrlEncode(kv.Key) + "=" + HttpUtility.UrlEncode(kv.Value) + "&");
-				}
-			}
+        #endregion
 
-			if (data.Length > 0)
-			{
-				data.Remove(data.Length - 1, 1);
-			}
+        #region Response process
 
-			return data.ToString();
-		}
-		#endregion
-	}
+        public bool ValidateSignature(string inputHash, string secretKey)
+        {
+            string rspRaw = GetResponseData();
+            string myChecksum = Utils.HmacSHA512(secretKey, rspRaw);
+            return myChecksum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
+        }
+        private string GetResponseData()
+        {
 
-	public static class Utils
-	{
-		public static string HmacSHA512(string key, string inputData)
-		{
-			var hash = new StringBuilder();
-			var keyBytes = Encoding.UTF8.GetBytes(key);
-			var inputBytes = Encoding.UTF8.GetBytes(inputData);
+            StringBuilder data = new StringBuilder();
+            if (_responseData.ContainsKey("vnp_SecureHashType"))
+            {
+                _responseData.Remove("vnp_SecureHashType");
+            }
+            if (_responseData.ContainsKey("vnp_SecureHash"))
+            {
+                _responseData.Remove("vnp_SecureHash");
+            }
+            foreach (KeyValuePair<string, string> kv in _responseData)
+            {
+                if (!String.IsNullOrEmpty(kv.Value))
+                {
+                    data.Append(WebUtility.UrlEncode(kv.Key) + "=" + WebUtility.UrlEncode(kv.Value) + "&");
+                }
+            }
+            //remove last '&'
+            if (data.Length > 0)
+            {
+                data.Remove(data.Length - 1, 1);
+            }
+            return data.ToString();
+        }
 
-			using (var hmac = new HMACSHA512(keyBytes))
-			{
-				var hashValue = hmac.ComputeHash(inputBytes);
-				foreach (var b in hashValue)
-				{
-					hash.Append(b.ToString("x2"));
-				}
-			}
+        #endregion
+    }
 
-			return hash.ToString();
-		}
 
-		public static string GetIpAddress()
-		{
-			try
-			{
-				var ipAddress = HttpContext.Current?.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+    public class Utils
+    {
 
-				if ((string.IsNullOrEmpty(ipAddress) == false)
-					&& (ipAddress.ToLower() != "unknown")
-					&& (ipAddress.Length <= 45))
-				{
-					return ipAddress.Split(',')[0].Trim();
-				}
 
-				return HttpContext.Current?.Request.ServerVariables["REMOTE_ADDR"] ?? "Unknown";
-			}
-			catch (Exception ex)
-			{
-				return "Invalid IP: " + ex.Message;
-			}
-		}
-	}
+        public static String HmacSHA512(string key, String inputData)
+        {
+            var hash = new StringBuilder();
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(inputData);
+            using (var hmac = new HMACSHA512(keyBytes))
+            {
+                byte[] hashValue = hmac.ComputeHash(inputBytes);
+                foreach (var theByte in hashValue)
+                {
+                    hash.Append(theByte.ToString("x2"));
+                }
+            }
 
-	public class VnPayCompare : IComparer<string>
-	{
-		public int Compare(string x, string y)
-		{
-			if (x == y) return 0;
-			if (x == null) return -1;
-			if (y == null) return 1;
+            return hash.ToString();
+        }
+        public static string GetIpAddress()
+        {
+            string ipAddress;
+            try
+            {
+                ipAddress = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
 
-			var vnpCompare = CompareInfo.GetCompareInfo("en-US");
-			return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
-		}
-	}
+                if (string.IsNullOrEmpty(ipAddress) || (ipAddress.ToLower() == "unknown") || ipAddress.Length > 45)
+                    ipAddress = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+            }
+            catch (Exception ex)
+            {
+                ipAddress = "Invalid IP:" + ex.Message;
+            }
+
+            return ipAddress;
+        }
+    }
+
+    public class VnPayCompare : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
+            if (x == y) return 0;
+            if (x == null) return -1;
+            if (y == null) return 1;
+            var vnpCompare = CompareInfo.GetCompareInfo("en-US");
+            return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
+        }
+    }
 }

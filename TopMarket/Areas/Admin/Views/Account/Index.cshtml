@@ -4,11 +4,10 @@
 }
 
 @section naviheader{
+    <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-                <i class="fas fa-bars"></i>
-            </a>
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="/admin/home" class="nav-link">Home</a>
@@ -19,6 +18,7 @@
     </ul>
 }
 
+<!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -26,30 +26,35 @@
                 <h1>Account Management</h1>
             </div>
         </div>
-    </div>
+    </div><!-- /.container-fluid -->
 </section>
 
+<!-- Main content -->
 <section class="content">
+
+    <!-- Default box -->
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header">
             <h3 class="card-title">Account List</h3>
+
             <div class="card-tools">
                 <a href="/admin/account/create" class="btn btn-success">Create New</a>
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th></th>
                         <th>Username</th>
                         <th>Full name</th>
                         <th>Email</th>
-                        <th style="width:150px;">Actions</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model != null && Model.Any()) {
+                    @if (Model != null && Model.Any())
+                    {
                         var i = 1;
                         foreach (var item in Model)
                         {
@@ -60,42 +65,43 @@
                                 <td>@item.Email</td>
                                 <td>
                                     <a href="/admin/account/edit/@item.Id" class="btn btn-sm btn-primary">Edit</a>
-                                    <button type="button" data-user="@item.UserName" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">Delete</button>
+                                    <a href="#" data-user="@item.UserName" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">Delete</a>
                                 </td>
                             </tr>
                             i++;
                         }
-                    } else {
-                        <tr>
-                            <td colspan="5" class="text-center text-muted">No accounts found</td>
-                        </tr>
+
                     }
                 </tbody>
             </table>
         </div>
+        <!-- /.card-body -->
         <div class="card-footer">
+
         </div>
+        <!-- /.card-footer-->
     </div>
+    <!-- /.card -->
+
 </section>
+<!-- /.content -->
 
 @section scripts{
     <script>
-        $(function () {
+        $(document).ready(function () {
             $('.btnDelete').click(function () {
                 var user = $(this).data('user');
                 var id = $(this).data('id');
-                if (confirm("Are you sure you want to delete account: " + user + "?")) {
-                    $.ajax({
-                        url: '/admin/account/DeleteAccount',
-                        type: 'POST',
-                        data: { user: user, id: id },
-                        success: function (res) {
-                            if (res.success) {
-                                $('#trow_' + id).remove();
-                            }
+                $.ajax({
+                    url: '/admin/account/DeleteAccount',
+                    type: 'POST',
+                    data: { user: user, id: id },
+                    success: function (res) {
+                        if (res.Success) {
+                            $('#trow_' + id).remove();
                         }
-                    });
-                }
+                    }
+                });
             });
         });
     </script>

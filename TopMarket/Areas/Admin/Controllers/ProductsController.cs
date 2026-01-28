@@ -1,174 +1,172 @@
 ﻿using PagedList;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using TopMarket.Models;
 using TopMarket.Models.EntityFramework;
-using CommonFilter = TopMarket.Models.Common.Filter;
 
 namespace TopMarket.Areas.Admin.Controllers
 {
-	[Authorize(Roles = "Admin, Employee")]
-	public class ProductsController : Controller
-	{
-		private readonly ApplicationDbContext db = new ApplicationDbContext();
-		private const int PageSize = 8;
+    [Authorize(Roles ="Admin, Employee")]
+    public class ProductsController : Controller
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
+        // GET: Admin/Product
+        public ActionResult Index(int? page)
+        {
+            IEnumerable<Product> items = db.Products.OrderByDescending(x => x.Id);
+            var pageSize = 8;
+            if (page == null)
+            {
+                page = 1;
+            }
+            var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            items = items.ToPagedList(pageIndex, pageSize);
+            ViewBag.PageSize = pageSize;
+            ViewBag.Page = page;
+            return View(items);
+        }
 
-		// GET: Admin/Product
-		public ActionResult Index(int? page)
-		{
-			var pageIndex = page ?? 1;
-			var products = db.Products.OrderByDescending(x => x.Id);
-			ViewBag.PageSize = PageSize;
-			ViewBag.Page = pageIndex;
-			return View(products.ToPagedList(pageIndex, PageSize));
-		}
+        public ActionResult Add()
+        {
+            ViewBag.ProductCategory = new SelectList(db.ProductCategories.ToList(), "Id", "Title");
+            return View();
+        }
 
-		public ActionResult Add()
-		{
-			ViewBag.ProductCategory = new SelectList(db.ProductCategories.ToList(), "Id", "Title");
-			return View();
-		}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Add(Product model, List<string> Images, List<int> rDefault)
+        {
+            if (ModelState.IsValid)
+            {
+                if (Images != null && Images.Count > 0)
+                {
+                    for (int i = 0; i < Images.Count; i++)
+                    {
+                        if (i + 1 == rDefault[0])
+                        {
+                            model.Image = Images[i];
+                            model.ProductImages.Add(new ProductImage
+                            {
+                                ProductId = model.Id,
+                                Image = Images[i],
+                                IsDefault = true
+                            });
+                        }
+                        else
+                        {
+                            model.ProductImages.Add(new ProductImage
+                            {
+                                ProductId = model.Id,
+                                Image = Images[i],
+                                IsDefault = false
+                            });
+                        }
+                    }
+                }
+                model.DateCreated = DateTime.Now;
+                model.DateModified = DateTime.Now;
+                if (string.IsNullOrEmpty(model.Alias))
+                    model.Alias = TopMarket.Models.Common.Filter.FilterChar(model.Title);
+                db.Products.Add(model);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.ProductCategory = new SelectList(db.ProductCategories.ToList(), "Id", "Title");
+            return View(model);
+        }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Add(Product model, List<string> images, List<int> rDefault)
-		{
-			if (ModelState.IsValid)
-			{
-				if ((images != null)
-					&& (images.Count > 0)
-					&& (rDefault != null)
-					&& (rDefault.Count > 0))
-				{
-					for (int i = 0; i < images.Count; i++)
-					{
-						bool isDefault = (i + 1 == rDefault[0]);
-						if (isDefault) model.Image = images[i];
 
-						model.ProductImages.Add(new ProductImage
-						{
-							Image = images[i],
-							IsDefault = isDefault
-						});
-					}
-				}
+        public ActionResult Edit(int id)
+        {
+            ViewBag.ProductCategory = new SelectList(db.ProductCategories.ToList(), "Id", "Title");
+            var item = db.Products.Find(id);
+            return View(item);
+        }
 
-				model.DateCreated = DateTime.UtcNow;
-				model.DateModified = DateTime.UtcNow;
-				if (string.IsNullOrEmpty(model.Alias)) model.Alias = CommonFilter.FilterChar(model.Title);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Product model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.DateModified = DateTime.Now;
+                model.Alias = TopMarket.Models.Common.Filter.FilterChar(model.Title);
+                db.Products.Attach(model);
+                db.Entry(model).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
 
-				db.Products.Add(model);
-				db.SaveChanges();
-				return RedirectToAction("Index");
-			}
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            var item = db.Products.Find(id);
+            if (item != null)
+            {
+                var checkImg = item.ProductImages.Where(x => x.ProductId == item.Id);
+                if (checkImg != null)
+                {
+                    foreach (var img in checkImg)
+                    {
+                        db.ProductImages.Remove(img);
+                        db.SaveChanges();
+                    }
+                }
+                db.Products.Remove(item);
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
 
-			ViewBag.ProductCategory = new SelectList(db.ProductCategories.ToList(), "Id", "Title");
-			return View(model);
-		}
+            return Json(new { success = false });
+        }
 
-		public ActionResult Edit(int id)
-		{
-			ViewBag.ProductCategory = new SelectList(db.ProductCategories.ToList(), "Id", "Title");
-			var product = db.Products.Find(id);
-			if (product == null) return HttpNotFound();
+        [HttpPost]
+        public ActionResult IsActive(int id)
+        {
+            var item = db.Products.Find(id);
+            if (item != null)
+            {
+                item.IsActive = !item.IsActive;
+                db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { success = true, isAcive = item.IsActive });
+            }
 
-			return View(product);
-		}
+            return Json(new { success = false });
+        }
+        [HttpPost]
+        public ActionResult IsHome(int id)
+        {
+            var item = db.Products.Find(id);
+            if (item != null)
+            {
+                item.IsHome = !item.IsHome;
+                db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { success = true, IsHome = item.IsHome });
+            }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(Product model)
-		{
-			if (ModelState.IsValid)
-			{
-				var product = db.Products.Find(model.Id);
-				if (product == null) return HttpNotFound();
+            return Json(new { success = false });
+        }
 
-				product.Title = model.Title;
-				product.Description = model.Description;
-				product.Price = model.Price;
-				product.Alias = CommonFilter.FilterChar(model.Title);
+        [HttpPost]
+        public ActionResult IsSale(int id)
+        {
+            var item = db.Products.Find(id);
+            if (item != null)
+            {
+                item.IsSale = !item.IsSale;
+                db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { success = true, IsSale = item.IsSale });
+            }
 
-				db.Entry(product).State = EntityState.Modified;
-				db.SaveChanges();
-				return RedirectToAction("Index");
-			}
-
-			return View(model);
-		}
-
-		[HttpPost]
-		public ActionResult Delete(int id)
-		{
-			var product = db.Products.Find(id);
-			if (product != null)
-			{
-				var images = product.ProductImages.ToList();
-				foreach (var img in images)
-				{
-					db.ProductImages.Remove(img);
-				}
-
-				db.Products.Remove(product);
-				db.SaveChanges();
-				return Json(new { success = true });
-			}
-
-			return Json(new { success = false });
-		}
-
-		[HttpPost]
-		public ActionResult IsActive(int id)
-		{
-			var product = db.Products.Find(id);
-			if (product != null)
-			{
-				product.IsActive = !product.IsActive;
-				db.Entry(product).State = EntityState.Modified;
-				db.SaveChanges();
-				return Json(new { success = true, isActive = product.IsActive });
-			}
-
-			return Json(new { success = false });
-		}
-
-		[HttpPost]
-		public ActionResult IsHome(int id)
-		{
-			var product = db.Products.Find(id);
-			if (product != null)
-			{
-				product.IsHome = !product.IsHome;
-				db.Entry(product).State = EntityState.Modified;
-				db.SaveChanges();
-				return Json(new { success = true, isHome = product.IsHome });
-			}
-
-			return Json(new { success = false });
-		}
-
-		[HttpPost]
-		public ActionResult IsSale(int id)
-		{
-			var product = db.Products.Find(id);
-			if (product != null)
-			{
-				product.IsSale = product.IsSale == false;
-				db.Entry(product).State = EntityState.Modified;
-				db.SaveChanges();
-				return Json(new { success = true, isSale = product.IsSale });
-			}
-
-			return Json(new { success = false });
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing) db.Dispose();
-			base.Dispose(disposing);
-		}
-	}
+            return Json(new { success = false });
+        }
+    }
 }

@@ -1,85 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using TopMarket.Models;
 using TopMarket.Models.EntityFramework;
 
 namespace TopMarket.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    public class MenuCategoryController : Controller
-    {
-        private ApplicationDbContext db = new ApplicationDbContext();
-        // GET: Admin/Category
-        public ActionResult Index()
-        {
-            var items = db.Categories;
-            return View(items);
-        }
+	[Authorize(Roles = "Admin")]
+	public class MenuCategoryController : Controller
+	{
+		private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        public ActionResult Add()
-        {
-            return View();
-        }
+		// GET: Admin/Category
+		public ActionResult Index()
+		{
+			var items = db.Categories;
+			return View(items);
+		}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Add(MenuCategory model)
-        {
-            if (ModelState.IsValid)
-            {
-                model.DateCreated = DateTime.Now;
-                model.DateModified = DateTime.Now;
-                model.Alias = TopMarket.Models.Common.Filter.FilterChar(model.Title);
-                db.Categories.Add(model);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(model);
-        }
+		public ActionResult Add() => View();
 
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Add(MenuCategory model)
+		{
+			if (!ModelState.IsValid) return View(model);
 
-        public ActionResult Edit(int id)
-        {
-            var item = db.Categories.Find(id);
-            return View(item);
-        }
+			model.DateCreated = DateTime.Now;
+			model.DateModified = DateTime.Now;
+			model.Alias = TopMarket.Models.Common.Filter.FilterChar(model.Title);
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(MenuCategory model)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Categories.Attach(model);
-                model.DateModified = DateTime.Now;
-                model.Alias = TopMarket.Models.Common.Filter.FilterChar(model.Title);
-                db.Entry(model).Property(x => x.Title).IsModified = true;
-                db.Entry(model).Property(x => x.Alias).IsModified = true;
-                db.Entry(model).Property(x => x.Description).IsModified = true;
-                db.Entry(model).Property(x => x.Link).IsModified = true;
-                db.Entry(model).Property(x => x.Position).IsModified = true;
-                db.Entry(model).Property(x => x.DateModified).IsModified = true;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+			db.Categories.Add(model);
+			db.SaveChanges();
 
-            }
-            return View(model);
-        }
+			return RedirectToAction("Index");
+		}
 
-        public ActionResult Delete(int id)
-        {
-            var item = db.Categories.Find(id);
-            if (item != null)
-            {
-                //var DeleteItem = db.Categories.Attach(item);
-                db.Categories.Remove(item);
-                db.SaveChanges();
-                return Json(new { success = true });
-            }
-            return Json(new { success = false });
-        }
-    }
+		public ActionResult Edit(int id)
+		{
+			var item = db.Categories.Find(id);
+			return View(item);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Edit(MenuCategory model)
+		{
+			if (!ModelState.IsValid) return View(model);
+
+			db.Categories.Attach(model);
+			model.DateModified = DateTime.Now;
+			model.Alias = TopMarket.Models.Common.Filter.FilterChar(model.Title);
+
+			db.Entry(model).Property(x => x.Title).IsModified = true;
+			db.Entry(model).Property(x => x.Alias).IsModified = true;
+			db.Entry(model).Property(x => x.Description).IsModified = true;
+			db.Entry(model).Property(x => x.Link).IsModified = true;
+			db.Entry(model).Property(x => x.Position).IsModified = true;
+			db.Entry(model).Property(x => x.DateModified).IsModified = true;
+
+			db.SaveChanges();
+			return RedirectToAction("Index");
+		}
+
+		public ActionResult Delete(int id)
+		{
+			var item = db.Categories.Find(id);
+			if (item == null) return Json(new { success = false });
+
+			db.Categories.Remove(item);
+			db.SaveChanges();
+
+			return Json(new { success = true });
+		}
+	}
 }

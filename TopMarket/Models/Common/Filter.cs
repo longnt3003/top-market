@@ -1,108 +1,97 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace TopMarket.Models.Common
 {
-    public class Filter
-    {
-        private static readonly string strCheck = "áàạảãâấầậẩẫăắằặẳẵÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴéèẹẻẽêếềệểễÉÈẸẺẼÊẾỀỆỂỄ" +
-            "óòọỏõôốồộổỗơớờợởỡÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠúùụủũưứừựửữÚÙỤỦŨƯỨỪỰỬỮíìịỉĩÍÌỊỈĨđĐýỳỵỷỹÝỲỴỶỸ~!@#$%^&*()-[{]}|\\/'\"\\.,><;:";
+	public static class Filter
+	{
+		private static readonly Dictionary<char, char> VietnameseMap = CreateVietnameseMap();
 
-        private static readonly string[] VietNamChar = new string[]
-        {
-            "aAeEoOuUiIdDyY",
-            "áàạảãâấầậẩẫăắằặẳẵ",
-            "ÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
-            "éèẹẻẽêếềệểễ",
-            "ÉÈẸẺẼÊẾỀỆỂỄ",
-            "óòọỏõôốồộổỗơớờợởỡ",
-            "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ",
-            "úùụủũưứừựửữ",
-            "ÚÙỤỦŨƯỨỪỰỬỮ",
-            "íìịỉĩ",
-            "ÍÌỊỈĨ",
-            "đ",
-            "Đ",
-            "ýỳỵỷỹ",
-            "ÝỲỴỶỸ"
-        };
+		private static Dictionary<char, char> CreateVietnameseMap()
+		{
+			var map = new Dictionary<char, char>();
 
-        public static string FilterChar(string str)
-        {
-            str = str.Trim();
-            for (int i = 1; i < VietNamChar.Length; i++)
-            {
-                for (int j = 0; j < VietNamChar[i].Length; j++)
-                {
-                    str = str.Replace(VietNamChar[i][j], VietNamChar[0][i - 1]);
-                }
-            }
-            str = str.Replace(" ", "-");
-            str = str.Replace("--", "-");
-            str = str.Replace("?", "");
-            str = str.Replace("&", "");
-            str = str.Replace(",", "");
-            str = str.Replace(":", "");
-            str = str.Replace("!", "");
-            str = str.Replace("'", "");
-            str = str.Replace("\"", "");
-            str = str.Replace("%", "");
-            str = str.Replace("#", "");
-            str = str.Replace("$", "");
-            str = str.Replace("*", "");
-            str = str.Replace("`", "");
-            str = str.Replace("~", "");
-            str = str.Replace("@", "");
-            str = str.Replace("^", "");
-            str = str.Replace(".", "");
-            str = str.Replace("/", "");
-            str = str.Replace(">", "");
-            str = str.Replace("<", "");
-            str = str.Replace("[", "");
-            str = str.Replace("]", "");
-            str = str.Replace(";", "");
-            str = str.Replace("+", "");
-            return str.ToLower();
-        }
+			// a ă â
+			AddMapping(map, "áàạảãâấầậẩẫăắằặẳẵ", 'a');
+			AddMapping(map, "ÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴ", 'a');
 
-        public static string PunctuationConverter(string str)
-        {
-            str = str.Trim();
-            for (int i = 1; i < VietNamChar.Length; i++)
-            {
-                for (int j = 0; j < VietNamChar[i].Length; j++)
-                {
-                    str = str.Replace(VietNamChar[i][j], VietNamChar[0][i - 1]);
-                }
-            }
-            //str = str.Replace(" ", "-");
-            str = str.Replace("--", "-");
-            str = str.Replace("?", "");
-            str = str.Replace("&", "");
-            str = str.Replace(",", "");
-            str = str.Replace(":", "");
-            str = str.Replace("!", "");
-            str = str.Replace("'", "");
-            str = str.Replace("\"", "");
-            str = str.Replace("%", "");
-            str = str.Replace("#", "");
-            str = str.Replace("$", "");
-            str = str.Replace("*", "");
-            str = str.Replace("`", "");
-            str = str.Replace("~", "");
-            str = str.Replace("@", "");
-            str = str.Replace("^", "");
-            str = str.Replace(".", "");
-            str = str.Replace("/", "");
-            str = str.Replace(">", "");
-            str = str.Replace("<", "");
-            str = str.Replace("[", "");
-            str = str.Replace("]", "");
-            str = str.Replace(";", "");
-            str = str.Replace("+", "");
-            return str.ToLower();
-        }
-    }
+			// e ê
+			AddMapping(map, "éèẹẻẽêếềệểễ", 'e');
+			AddMapping(map, "ÉÈẸẺẼÊẾỀỆỂỄ", 'e');
+
+			// i
+			AddMapping(map, "íìịỉĩ", 'i');
+			AddMapping(map, "ÍÌỊỈĨ", 'i');
+
+			// o ô ơ
+			AddMapping(map, "óòọỏõôốồộổỗơớờợởỡ", 'o');
+			AddMapping(map, "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ", 'o');
+
+			// u ư
+			AddMapping(map, "úùụủũưứừựửữ", 'u');
+			AddMapping(map, "ÚÙỤỦŨƯỨỪỰỬỮ", 'u');
+
+			// đ
+			map['đ'] = 'd';
+			map['Đ'] = 'd';
+
+			// y
+			AddMapping(map, "ýỳỵỷỹ", 'y');
+			AddMapping(map, "ÝỲỴỶỸ", 'y');
+
+			return map;
+		}
+
+		private static void AddMapping(Dictionary<char, char> map, string source, char target)
+		{
+			foreach (char c in source)
+			{
+				map[c] = target;
+			}
+		}
+
+		public static string ToSlug(string input, bool replaceSpaceWithDash = true)
+		{
+			if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+			var sb = new StringBuilder(input.Length);
+			foreach (char c in input)
+			{
+				var processed = c;
+				if (VietnameseMap.TryGetValue(c, out char replacement))
+				{
+					processed = replacement;
+				}
+
+				if (char.IsLetterOrDigit(processed)
+					|| processed == ' '
+					|| processed == '-')
+				{
+					sb.Append(processed);
+				}
+				else
+				{
+					sb.Append(' ');
+				}
+			}
+
+			var result = sb.ToString().Trim().Replace("  ", " ");
+			if (replaceSpaceWithDash)
+			{
+				result = result.Replace(' ', '-');
+			}
+
+			while (result.Contains("--"))
+			{
+				result = result.Replace("--", "-");
+			}
+
+			result = result.Trim('-');
+
+			return result.ToLower();
+		}
+
+		public static string FilterChar(string str) { return ToSlug(str, replaceSpaceWithDash: true); }
+		public static string PunctuationConverter(string str) { return ToSlug(str, replaceSpaceWithDash: false); }
+	}
 }

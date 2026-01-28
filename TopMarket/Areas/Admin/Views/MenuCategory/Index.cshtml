@@ -1,0 +1,98 @@
+﻿@model IEnumerable<TopMarket.Models.EntityFramework.MenuCategory>
+@{
+	ViewBag.Title = "Category Management";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader {
+	<ul class="navbar-nav">
+		<li class="nav-item">
+			<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+		</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="/admin/home" class="nav-link">Home</a>
+		</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="/admin/menucategory" class="nav-link">Category Management</a>
+		</li>
+	</ul>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>Category Management</h1>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<div class="card">
+		<div class="card-header">
+			<h3 class="card-title">Category List</h3>
+			<div class="card-tools">
+				<a href="/admin/menucategory/add" class="btn btn-primary">Add</a>
+			</div>
+		</div>
+		<div class="card-body">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Category Name</th>
+						<th>Position</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Model != null && Model.Any()) {
+						var i = 1;
+						foreach (var item in Model) {
+							<tr id="trow_@item.Id">
+								<td>@i</td>
+								<td>@item.Title</td>
+								<td>@item.Position</td>
+								<td>
+									<a href="/admin/menucategory/edit/@item.Id" class="btn btn-sm btn-primary">Edit</a>
+									<a href="#" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">Delete</a>
+								</td>
+							</tr>
+							i++;
+						}
+					} else {
+						<tr>
+							<td colspan="4">Empty!</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>
+
+@section scripts {
+	<script>
+		$(document).ready(function () {
+			$('body').on('click', '.btnDelete', function () {
+				var id = $(this).data("id");
+				var conf = confirm('Are you sure you want to delete this record?');
+				if (conf === true) {
+					$.ajax({
+						url: '/admin/menucategory/delete',
+						type: 'POST',
+						data: { id: id },
+						success: function (rs) {
+							if (rs.success) {
+								$('#trow_' + id).remove();
+							}
+						}
+					});
+				}
+			});
+		});
+	</script>
+}

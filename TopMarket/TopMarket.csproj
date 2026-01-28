@@ -203,10 +203,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202601280720475_InitialCreate.cs" />
-    <Compile Include="Migrations\202601280720475_InitialCreate.Designer.cs">
-      <DependentUpon>202601280720475_InitialCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CommonAbstract.cs" />
@@ -3237,9 +3233,9 @@
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_PartialSideBar.cshtml" />
-    <Content Include="Areas\Admin\Views\Category\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Category\Add.cshtml" />
-    <Content Include="Areas\Admin\Views\Category\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuCategory\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuCategory\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuCategory\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Blog\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Blog\Add.cshtml" />
     <Content Include="Content\ckeditor\CHANGES.md" />
@@ -3435,11 +3431,6 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202601280720475_InitialCreate.resx">
-      <DependentUpon>202601280720475_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

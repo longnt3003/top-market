@@ -174,15 +174,14 @@ cd top-market
 
 ## License
 
-MIT License -- see the `LICENSE` file for details.
-
-------------------------------------------------------------------------
+MIT License – see the [LICENSE](LICENSE) file for details.
 
 ## Author
 
-**Nguyễn Thành Long**\
-GitHub: [@longnt3003](https://github.com/longnt3003)\
-Ho Chi Minh City, Vietnam
+**Nguyễn Thành Long**  
+GitHub: [@longnt3003](https://github.com/longnt3003)  
+Location: Ho Chi Minh City, Vietnam
 
-If you find this project useful, please give it a ⭐ or fork it.\
+If you find this project useful, please give it a ⭐ or fork it!
+
 Happy coding!
